@@ -70,9 +70,51 @@
     }
     nav a:hover { color: var(--ink); }
 
+    /* ── Subscription banner ── */
+    .sub-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      background: var(--ink);
+      color: var(--bg);
+      padding: 1rem 1.5rem;
+      border-radius: 3px;
+      margin-bottom: 3rem;
+    }
+
+    .sub-label {
+      font-family: var(--serif);
+      font-style: italic;
+      color: var(--accent);
+      margin-right: .75rem;
+    }
+
+    .sub-banner-text {
+      font-size: .75rem;
+      letter-spacing: .03em;
+      opacity: .9;
+    }
+
+    .sub-cta {
+      background: var(--accent);
+      color: var(--bg);
+      text-decoration: none;
+      padding: .5rem 1.25rem;
+      border-radius: 2px;
+      font-size: .72rem;
+      letter-spacing: .06em;
+      white-space: nowrap;
+      transition: opacity .15s;
+      flex-shrink: 0;
+    }
+
+    .sub-cta:hover { opacity: .85; }
+
     /* ── Tagline ── */
     .tagline {
-      padding: 1.5rem 0 3rem;
+      padding: 1.5rem 0 2rem;
       font-family: var(--serif);
       font-size: clamp(1rem, 2.2vw, 1.2rem);
       font-style: italic;
@@ -296,6 +338,14 @@
 </header>
 
 <p class="tagline">one problem. one tool. shipped daily.</p>
+
+<div class="sub-banner">
+  <div class="sub-banner-text">
+    <span class="sub-label">µ micro Pass</span>
+    Unlimited access to every tool, forever — past and future.
+  </div>
+  <a href="https://buy.stripe.com/8x23cv6jb3oNf5U8t377O00" id="subscribe-btn" class="sub-cta">Subscribe — $10 / month →</a>
+</div>
 
 <div class="stats">
   <div><strong id="stat-count">—</strong>tools built</div>
