@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>µ — microtools by anish punati</title>
+  <meta name="description" content="A growing collection of small tools that solve one problem well." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #F4F3EF;
+      --surface:   #FDFCF8;
+      --ink:       #1A1917;
+      --muted:     #9A9790;
+      --accent:    #C8410A;
+      --border:    #E2E0D8;
+      --mono:      'JetBrains Mono', monospace;
+      --serif:     'Instrument Serif', Georgia, serif;
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--mono);
+      min-height: 100vh;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+    }
+
+    /* ── Header ── */
+    header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 3.5rem 0 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      font-family: var(--serif);
+      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .brand em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    nav {
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    nav a {
+      color: inherit;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      transition: color 0.15s;
+    }
+    nav a:hover { color: var(--ink); }
+
+    /* ── Tagline ── */
+    .tagline {
+      padding: 1.5rem 0 3rem;
+      font-family: var(--serif);
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      font-style: italic;
+      color: var(--muted);
+      letter-spacing: 0.01em;
+    }
+
+    /* ── Stats bar ── */
+    .stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .stats strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: 2rem;
+      font-style: italic;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 0.1rem;
+      text-transform: none;
+    }
+
+    /* ── Grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+      gap: 1.5rem;
+      padding-bottom: 5rem;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: #C8C6BC;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      transform: translateY(-2px);
+    }
+
+    .card:hover::before { transform: scaleX(1); }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .card-category {
+      background: var(--bg);
+      padding: 0.2rem 0.5rem;
+      border-radius: 2px;
+      border: 1px solid var(--border);
+    }
+
+    .card-name {
+      font-family: var(--serif);
+      font-size: 1.45rem;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+
+    .card-desc {
+      font-size: 0.78rem;
+      line-height: 1.6;
+      color: #5C5A55;
+      flex: 1;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 0.15rem 0.45rem;
+      border-radius: 2px;
+    }
+
+    .card-links {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .link {
+      font-size: 0.7rem;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: color 0.15s;
+    }
+
+    .link:hover { color: var(--ink); }
+
+    .link-buy {
+      margin-left: auto;
+      background: var(--ink);
+      color: var(--bg) !important;
+      padding: 0.3rem 0.75rem;
+      border-radius: 2px;
+      transition: background 0.15s !important;
+    }
+
+    .link-buy:hover { background: var(--accent) !important; }
+
+    /* ── Empty state ── */
+    .empty {
+      grid-column: 1 / -1;
+      padding: 5rem 0;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .empty .glyph {
+      font-family: var(--serif);
+      font-size: 5rem;
+      font-style: italic;
+      display: block;
+      margin-bottom: 1rem;
+      opacity: 0.3;
+    }
+
+    .empty p {
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.68rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    footer a { color: inherit; text-decoration: none; }
+    footer a:hover { color: var(--ink); }
+
+    /* ── Skeleton loader ── */
+    @keyframes shimmer {
+      0%   { background-position: -600px 0; }
+      100% { background-position: 600px 0; }
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%);
+      background-size: 600px 100%;
+      animation: shimmer 1.4s infinite linear;
+      border-radius: 2px;
+    }
+
+    .card.loading .card-name,
+    .card.loading .card-desc,
+    .card.loading .card-meta { color: transparent; }
+
+    .card.loading .card-name  { background: var(--border); border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="brand" href="/"><em>µ</em> micro</a>
+  <nav>
+    <a href="https://github.com/anishpunati" target="_blank" rel="noopener">GitHub ↗</a>
+  </nav>
+</header>
+
+<p class="tagline">one problem. one tool. shipped daily.</p>
+
+<div class="stats">
+  <div><strong id="stat-count">—</strong>tools built</div>
+  <div><strong id="stat-latest">—</strong>last shipped</div>
+  <div><strong id="stat-categories">—</strong>categories</div>
+</div>
+
+<main class="grid" id="grid">
+  <!-- populated by JS -->
+</main>
+
+<footer>
+  <span>µ micro · built by <a href="https://github.com/anishpunati">anish punati</a></span>
+  <span id="footer-updated"></span>
+</footer>
+
+<script>
+  const ICONS = {
+    github:    '⌥ github',
+    live:      '⊹ live',
+    npm:       '⬡ npm',
+    buy:       'buy →',
+    default:   '↗',
+  };
+
+  const CATEGORY_LABELS = {
+    cli:        'CLI',
+    web:        'Web App',
+    extension:  'Extension',
+    bot:        'Bot',
+    library:    'Library',
+    template:   'Template',
+    other:      'Other',
+  };
+
+  function formatDate(iso) {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function relativeDate(iso) {
+    const diff = Date.now() - new Date(iso);
+    const days = Math.floor(diff / 86400000);
+    if (days === 0) return 'today';
+    if (days === 1) return 'yesterday';
+    if (days < 30) return `${days}d ago`;
+    const months = Math.floor(days / 30);
+    return `${months}mo ago`;
+  }
+
+  function renderCard(tool) {
+    const card = document.createElement('article');
+    card.className = 'card';
+
+    const links = [];
+    if (tool.github_url) links.push(`<a class="link" href="${tool.github_url}" target="_blank" rel="noopener">⌥ github</a>`);
+    if (tool.live_url)   links.push(`<a class="link" href="${tool.live_url}"   target="_blank" rel="noopener">⊹ live</a>`);
+    if (tool.npm_url)    links.push(`<a class="link" href="${tool.npm_url}"    target="_blank" rel="noopener">⬡ npm</a>`);
+    if (tool.payment_url) links.push(`<a class="link link-buy" href="${tool.payment_url}" target="_blank" rel="noopener">buy ${tool.price ? '· ' + tool.price : ''} →</a>`);
+
+    const tags = (tool.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
+    const cat  = CATEGORY_LABELS[tool.category] || tool.category || 'tool';
+
+    card.innerHTML = `
+      <div class="card-meta">
+        <span class="card-category">${cat}</span>
+        <span title="${formatDate(tool.date)}">${relativeDate(tool.date)}</span>
+      </div>
+      <h2 class="card-name">${tool.name}</h2>
+      <p class="card-desc">${tool.description}</p>
+      ${tags ? `<div class="card-tags">${tags}</div>` : ''}
+      <div class="card-links">${links.join('') || '<span style="font-size:.7rem;color:var(--muted)">coming soon</span>'}</div>
+    `;
+    return card;
+  }
+
+  function renderEmpty() {
+    const el = document.createElement('div');
+    el.className = 'empty';
+    el.innerHTML = `<span class="glyph">µ</span><p>first tool ships tomorrow at 4 am</p>`;
+    return el;
+  }
+
+  async function init() {
+    const grid = document.getElementById('grid');
+
+    try {
+      const res   = await fetch('tools.json?v=' + Date.now());
+      const tools = await res.json();
+
+      document.getElementById('stat-count').textContent = tools.length;
+
+      const sorted = [...tools].sort((a, b) => new Date(b.date) - new Date(a.date));
+      const latest = sorted[0];
+      document.getElementById('stat-latest').textContent = latest ? relativeDate(latest.date) : '—';
+
+      const cats = new Set(tools.map(t => t.category).filter(Boolean));
+      document.getElementById('stat-categories').textContent = cats.size || '—';
+
+      document.getElementById('footer-updated').textContent =
+        latest ? `last updated ${formatDate(latest.date)}` : '';
+
+      if (tools.length === 0) {
+        grid.appendChild(renderEmpty());
+      } else {
+        sorted.forEach(t => grid.appendChild(renderCard(t)));
+      }
+    } catch (e) {
+      grid.appendChild(renderEmpty());
+    }
+  }
+
+  init();
+</script>
+</body>
+</html>
