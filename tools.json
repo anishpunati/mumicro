@@ -1,5 +1,18 @@
 [
   {
+    "slug": "envsync",
+    "description": "Spot missing, extra, and empty keys between .env and .env.example instantly",
+    "thought_process": "Found repeated complaints on r/node and Stack Overflow about .env drift causing broken deploys. Existing solutions like dotenv-safe require code changes inside the app; no popular zero-dep CLI fills the gap of a simple pre-flight diff you can drop into any project or CI step.",
+    "problem": "Developers routinely ship with missing or mismatched environment variables because there is no fast CLI way to compare .env against .env.example \u2014 you either inspect both files by hand or wire up dotenv-safe inside application code.",
+    "solution": "envsync reads both files, computes a diff in milliseconds, and prints a color-coded report of missing keys, extra keys, and keys present but empty \u2014 with a non-zero exit code so it can gate CI or pre-commit hooks.",
+    "method": "Pure Node.js with no dependencies: reads both files line-by-line, parses KEY=VALUE pairs while ignoring comments and blank lines, then computes set differences and emptiness checks, printing results with ANSI color codes.",
+    "date": "2026-05-10",
+    "github": "https://github.com/anishpunati/envsync",
+    "price": 2.99,
+    "payUrl": "https://buy.stripe.com/eVq14nePHbVjf5U7oZ77O02",
+    "paymentLinkId": "plink_1TVWZXI2tQrvudWbCWJPe9Cv"
+  },
+  {
     "id": "tool-2026-05-10",
     "name": "env-diff",
     "slug": "env-diff",
