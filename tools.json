@@ -1,5 +1,18 @@
 [
   {
+    "slug": "dep-age",
+    "description": "Show when each of your npm dependencies was last published to spot abandoned packages",
+    "thought_process": "Found this pain point across multiple HN threads and r/node posts where developers complained about inheriting projects with quietly abandoned dependencies. npm outdated tells you if you're behind the latest version, but it doesn't tell you if the package itself has gone dark. No popular zero-dep CLI fills this gap \u2014 existing tools like libyear require install and configuration. This tool runs as a one-shot npx command against any package.json.",
+    "problem": "When you inherit a codebase, there's no quick way to see which dependencies haven't had a release in years. You only discover abandoned packages after they cause security or compatibility issues.",
+    "solution": "dep-age reads your package.json and queries the npm registry for each dependency's last publish date, highlighting packages that haven't been updated in over a year.",
+    "method": "Reads package.json, fires parallel HTTPS requests to registry.npmjs.org for each package, extracts the latest version's publish timestamp, and renders a colour-coded table sorted by staleness \u2014 oldest packages at the top.",
+    "date": "2026-05-10",
+    "github": "https://github.com/anishpunati/dep-age",
+    "price": 2.99,
+    "payUrl": "https://buy.stripe.com/aFa4gz22Vgbz6zo8t377O05",
+    "paymentLinkId": "plink_1TVbSWI2tQrvudWblQRPE1Oc"
+  },
+  {
     "slug": "dbg-scan",
     "description": "Scan source files for leftover console.log, debugger, and TODO statements before you ship",
     "thought_process": "Dozens of dev.to and Medium posts in 2025-2026 confirm that console.log left in production is a persistent, frustrating problem. ESLint solves it but requires project-wide config and a full lint run; grep works but is stateless and requires piping. No zero-dep CLI fills the gap of a single npx command you can drop into any project or CI step for a quick pre-ship audit.",
