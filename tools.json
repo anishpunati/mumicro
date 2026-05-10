@@ -1,5 +1,18 @@
 [
   {
+    "slug": "dbg-scan",
+    "description": "Scan source files for leftover console.log, debugger, and TODO statements before you ship",
+    "thought_process": "Dozens of dev.to and Medium posts in 2025-2026 confirm that console.log left in production is a persistent, frustrating problem. ESLint solves it but requires project-wide config and a full lint run; grep works but is stateless and requires piping. No zero-dep CLI fills the gap of a single npx command you can drop into any project or CI step for a quick pre-ship audit.",
+    "problem": "Developers routinely ship debug artifacts \u2014 console.log, debugger keywords, and stale TODO comments \u2014 because grep is clunky and ESLint requires full project setup; there's no fast zero-config CLI that runs in any project and returns a CI-friendly exit code.",
+    "solution": "dbg-scan recursively walks your source files, finds every console.log/debug/warn, debugger statement, and TODO/FIXME comment, and prints a color-coded report with file:line context \u2014 exiting non-zero when issues are found so it gates CI or pre-commit hooks.",
+    "method": "Pure Node.js with no dependencies: uses fs.readdirSync to walk directories, regex matching against configurable patterns, ANSI color output, and process.exit(1) when violations are found \u2014 so it works as a pre-commit hook or CI step with no config files needed.",
+    "date": "2026-05-10",
+    "github": "https://github.com/anishpunati/dbg-scan",
+    "price": 2.99,
+    "payUrl": "https://buy.stripe.com/bJe14n5f72kJg9YgZz77O04",
+    "paymentLinkId": "plink_1TVb0SI2tQrvudWb7tAsCInd"
+  },
+  {
     "slug": "envsync",
     "description": "Spot missing, extra, and empty keys between .env and .env.example instantly",
     "thought_process": "Found repeated complaints on r/node and Stack Overflow about .env drift causing broken deploys. Existing solutions like dotenv-safe require code changes inside the app; no popular zero-dep CLI fills the gap of a simple pre-flight diff you can drop into any project or CI step.",
