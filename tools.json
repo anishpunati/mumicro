@@ -18,7 +18,7 @@
     "problem": "Developers switching environments or onboarding waste time manually comparing .env files to find missing or stale variables.",
     "solution": "env-diff reads any two .env files and prints a clear diff of added, removed, and changed keys with no dependencies.",
     "method": "Pure Node.js file parsing handling comments, quoted values, and export prefixes; outputs ANSI color-coded terminal diff.",
-    "price": 2.99,
+    "price": 4.99,
     "payUrl": "https://buy.stripe.com/00w4gzcHz2kJ2j8dNn77O01"
   },
   {
