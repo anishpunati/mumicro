@@ -1,120 +1,65 @@
-// Vercel serverless function: /api/download
-//
-// Two auth modes:
-//
-//   Individual purchase:
-//     GET /api/download?tool=<slug>&session_id=<stripe_session_id>
-//
-//   Subscriber (µ micro Pass):
-//     GET /api/download?tool=<slug>&email=<email>&mode=sub
-//
-// Required Vercel environment variables:
-//   STRIPE_SECRET    — Stripe secret key (sk_live_...)
-//   GITHUB_TOKEN     — GitHub personal access token with repo scope
-//   GITHUB_USERNAME  — GitHub username (default: anishpunati)
+const https = require('https');
+const fs = require('fs');
+const path = require('path');
 
-module.exports = async function handler(req, res) {
-  const { tool: slug, session_id, email, mode } = req.query;
-
-  if (!slug) {
-    return res.status(400).json({ error: 'Missing tool parameter.' });
-  }
-
-  const auth = 'Basic ' + Buffer.from(process.env.STRIPE_SECRET + ':').toString('base64');
-
-  // ── Load tools.json from the live repo ──────────────────────────────────────
-  const toolsRes = await fetch(
-    'https://raw.githubusercontent.com/anishpunati/mumicro/main/tools.json',
-    { headers: { 'User-Agent': 'mumicro-download/1.0' } }
-  );
-  if (!toolsRes.ok) {
-    return res.status(500).json({ error: 'Could not load tool registry.' });
-  }
-  const tools = await toolsRes.json();
-  const tool  = tools.find(t => (t.slug || t.name) === slug);
-  if (!tool) {
-    return res.status(404).json({ error: `Tool "${slug}" not found.` });
-  }
-
-  // ── Auth: subscriber mode ────────────────────────────────────────────────────
-  if (mode === 'sub') {
-    if (!email || !email.includes('@')) {
-      return res.status(400).json({ error: 'Valid email required for subscriber downloads.' });
-    }
-
-    const custRes = await fetch(
-      `https://api.stripe.com/v1/customers?email=${encodeURIComponent(email)}&limit=10`,
-      { headers: { Authorization: auth } }
-    );
-    if (!custRes.ok) {
-      return res.status(500).json({ error: 'Could not verify subscription.' });
-    }
-    const custData = await custRes.json();
-    let isSubscriber = false;
-
-    for (const customer of (custData.data || [])) {
-      const subRes = await fetch(
-        `https://api.stripe.com/v1/subscriptions?customer=${customer.id}&status=active&limit=5`,
-        { headers: { Authorization: auth } }
-      );
-      if (!subRes.ok) continue;
-      const subData = await subRes.json();
-      if (subData.data && subData.data.length > 0) { isSubscriber = true; break; }
-    }
-
-    if (!isSubscriber) {
-      return res.status(403).json({ error: 'No active µ micro subscription found for this email.' });
-    }
-
-  // ── Auth: individual purchase mode ──────────────────────────────────────────
-  } else {
-    if (!session_id) {
-      return res.status(400).json({ error: 'Missing session_id parameter.' });
-    }
-
-    const sessionRes = await fetch(
-      `https://api.stripe.com/v1/checkout/sessions/${session_id}`,
-      { headers: { Authorization: auth } }
-    );
-    if (!sessionRes.ok) {
-      return res.status(400).json({ error: 'Invalid or expired session.' });
-    }
-    const session = await sessionRes.json();
-
-    if (session.payment_status !== 'paid') {
-      return res.status(402).json({ error: 'Payment not completed.' });
-    }
-
-    // Verify the payment was specifically for this tool (if paymentLinkId is stored)
-    const storedLinkId = tool.paymentLinkId || tool.stripeLinkId;
-    if (storedLinkId && session.payment_link && session.payment_link !== storedLinkId) {
-      return res.status(403).json({ error: 'This purchase was for a different tool.' });
-    }
-  }
-
-  // ── Fetch private repo zip from GitHub ──────────────────────────────────────
-  const owner  = process.env.GITHUB_USERNAME || 'anishpunati';
-  const zipRes = await fetch(
-    `https://api.github.com/repos/${owner}/${slug}/zipball/main`,
-    {
+function stripeGet(endpoint, secret) {
+  return new Promise((resolve, reject) => {
+    const options = {
+      hostname: 'api.stripe.com',
+      path: endpoint,
       headers: {
-        Authorization: `token ${process.env.GITHUB_TOKEN}`,
-        Accept: 'application/vnd.github+json',
-        'User-Agent': 'mumicro-download/1.0',
-      },
-      redirect: 'follow',
-    }
-  );
+        'Authorization': 'Basic ' + Buffer.from(secret + ':').toString('base64')
+      }
+    };
+    https.get(options, (res) => {
+      let body = '';
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => {
+        try { resolve(JSON.parse(body)); }
+        catch (e) { reject(new Error('Invalid JSON from Stripe')); }
+      });
+    }).on('error', reject);
+  });
+}
 
-  if (!zipRes.ok) {
-    console.error(`GitHub zipball failed: ${zipRes.status} for ${owner}/${slug}`);
-    return res.status(500).json({ error: 'Failed to retrieve source archive. Please contact support.' });
+module.exports = async (req, res) => {
+  const { session_id, tool } = req.query;
+
+  // Validate inputs
+  if (!session_id || !tool || !/^[a-z0-9-]+$/.test(tool)) {
+    return res.status(400).send('Invalid request');
   }
 
-  const zip = await zipRes.arrayBuffer();
-  res.setHeader('Content-Type', 'application/zip');
-  res.setHeader('Content-Disposition', `attachment; filename="${slug}-source.zip"`);
-  res.setHeader('Cache-Control', 'no-store, no-cache');
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  return res.status(200).send(Buffer.from(zip));
+  const secret = process.env.STRIPE_SECRET;
+  if (!secret) return res.status(500).send('Server misconfigured');
+
+  try {
+    // Verify the Stripe checkout session
+    const session = await stripeGet(
+      `/v1/checkout/sessions/${encodeURIComponent(session_id)}?expand[]=line_items.data.price.product`,
+      secret
+    );
+
+    if (session.error) return res.status(400).send('Session not found');
+    if (session.payment_status !== 'paid') return res.status(403).send('Payment not complete');
+
+    // Verify the purchased product matches the requested tool
+    const productName = session.line_items?.data?.[0]?.price?.product?.name;
+    if (productName !== tool) return res.status(403).send('Tool mismatch');
+
+    // Serve the zip
+    const zipPath = path.join(__dirname, '_zips', `${tool}.zip`);
+    if (!fs.existsSync(zipPath)) return res.status(404).send('Package not found — contact anishpunati@gmail.com');
+
+    const zip = fs.readFileSync(zipPath);
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', `attachment; filename="${tool}.zip"`);
+    res.setHeader('Content-Length', zip.length);
+    res.setHeader('Cache-Control', 'no-store');
+    return res.end(zip);
+
+  } catch (err) {
+    console.error('Download error:', err.message);
+    return res.status(500).send('Server error — contact anishpunati@gmail.com');
+  }
 };

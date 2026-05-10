@@ -28,16 +28,13 @@
       text-align: center;
     }
 
-    .icon {
-      font-size: 2.5rem;
-      margin-bottom: 1.25rem;
-    }
+    .icon { font-size: 2.5rem; margin-bottom: 1.25rem; }
 
     h1 {
       font-size: 1.4rem;
       font-weight: 600;
       color: #fff;
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.5rem;
     }
 
     .tool-name {
@@ -47,43 +44,46 @@
       margin-bottom: 1.75rem;
     }
 
-    .steps {
-      text-align: left;
+    .status-box {
       background: #0d0d0d;
       border: 1px solid #1e1e1e;
       border-radius: 8px;
       padding: 1.25rem 1.5rem;
-      margin-bottom: 1.75rem;
-    }
-
-    .steps p {
+      margin-bottom: 1.5rem;
       font-size: 0.875rem;
       color: #aaa;
       line-height: 1.7;
+      text-align: left;
     }
 
-    .steps strong {
-      color: #e5e5e5;
-    }
+    .status-box.error { border-color: #3a1a1a; color: #f87171; }
 
-    .steps a {
+    #status-msg { color: #7c9ef8; font-weight: 500; }
+
+    .btn {
+      display: inline-block;
+      padding: 0.6rem 1.4rem;
+      background: #1a1a2e;
+      border: 1px solid #2e2e5e;
+      border-radius: 8px;
       color: #7c9ef8;
+      font-size: 0.875rem;
       text-decoration: none;
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-top: 0.5rem;
     }
 
-    .steps a:hover {
-      text-decoration: underline;
-    }
+    .btn:hover { background: #22224a; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
     .back {
-      display: inline-block;
-      margin-top: 0.25rem;
+      display: block;
+      margin-top: 1.5rem;
       font-size: 0.8rem;
       color: #555;
       text-decoration: none;
-      transition: color 0.15s;
     }
-
     .back:hover { color: #888; }
   </style>
 </head>
@@ -93,15 +93,11 @@
     <h1>Payment successful</h1>
     <p class="tool-name" id="tool-label">µ micro</p>
 
-    <div class="steps">
-      <p>
-        <strong>Your receipt</strong> is on its way from Stripe.<br /><br />
-        <strong>To get your tool:</strong> reply to the receipt email or email
-        <a href="mailto:anishpunati@gmail.com">anishpunati@gmail.com</a>
-        with your order — you'll get GitHub access within a few hours.<br /><br />
-        <strong>Questions?</strong> Same address.
-      </p>
+    <div class="status-box" id="status-box">
+      <span id="status-msg">Preparing your download…</span>
     </div>
+
+    <button class="btn" id="dl-btn" disabled onclick="triggerDownload()">Download again</button>
 
     <a class="back" href="/">← back to µ micro</a>
   </div>
@@ -109,10 +105,70 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const tool = params.get('tool');
+    const sessionId = params.get('session_id');
+
     if (tool) {
       document.getElementById('tool-label').textContent = tool;
       document.title = `${tool} — purchase successful`;
     }
+
+    function triggerDownload() {
+      if (!tool || !sessionId) return;
+      const a = document.createElement('a');
+      a.href = `/api/download?session_id=${encodeURIComponent(sessionId)}&tool=${encodeURIComponent(tool)}`;
+      a.download = `${tool}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    async function autoDownload() {
+      const statusBox = document.getElementById('status-box');
+      const statusMsg = document.getElementById('status-msg');
+      const dlBtn = document.getElementById('dl-btn');
+
+      if (!tool || !sessionId) {
+        statusMsg.textContent = 'Missing order details.';
+        statusBox.classList.add('error');
+        statusBox.innerHTML += '<br><br>Email <a href="mailto:anishpunati@gmail.com" style="color:#7c9ef8">anishpunati@gmail.com</a> for help.';
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/download?session_id=${encodeURIComponent(sessionId)}&tool=${encodeURIComponent(tool)}`);
+
+        if (!res.ok) {
+          const text = await res.text();
+          statusMsg.textContent = `Download failed: ${text}`;
+          statusBox.classList.add('error');
+          statusBox.innerHTML += '<br><br>Email <a href="mailto:anishpunati@gmail.com" style="color:#7c9ef8">anishpunati@gmail.com</a> and include your order ID.';
+          return;
+        }
+
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${tool}.zip`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        statusMsg.textContent = `${tool}.zip downloaded successfully.`;
+        statusBox.style.borderColor = '#1a3a1a';
+        statusBox.innerHTML = `<span style="color:#4ade80">✓ ${tool}.zip downloaded.</span><br><br>Run <code style="color:#e5e5e5">npm install -g .</code> inside the unzipped folder to install.`;
+        dlBtn.disabled = false;
+
+      } catch (err) {
+        statusMsg.textContent = 'Network error — check your connection.';
+        statusBox.classList.add('error');
+        dlBtn.disabled = false;
+      }
+    }
+
+    // Small delay so the page renders before the download dialog pops
+    setTimeout(autoDownload, 800);
   </script>
 </body>
 </html>
