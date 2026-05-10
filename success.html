@@ -3,257 +3,116 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>µ — Download your tool</title>
-  <meta name="robots" content="noindex" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <title>Purchase successful — µ micro</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --bg:      #F4F3EF;
-      --surface: #FDFCF8;
-      --ink:     #1A1917;
-      --muted:   #9A9790;
-      --accent:  #C8410A;
-      --border:  #E2E0D8;
-      --mono:    'JetBrains Mono', monospace;
-      --serif:   'Instrument Serif', Georgia, serif;
-    }
-
-    html { font-size: 16px; }
-
     body {
-      background: var(--bg);
-      color: var(--ink);
-      font-family: var(--mono);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+      background: #0a0a0a;
+      color: #e5e5e5;
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
-      padding: 0 clamp(1.5rem, 5vw, 4rem);
-    }
-
-    header {
-      display: flex;
-      align-items: baseline;
-      padding: 3.5rem 0 1.25rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .brand {
-      font-family: var(--serif);
-      font-size: clamp(2.8rem, 6vw, 4.5rem);
-      line-height: 1;
-      letter-spacing: -0.02em;
-      color: var(--ink);
-      text-decoration: none;
-    }
-
-    .brand em { font-style: italic; color: var(--accent); }
-
-    main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 5rem 0;
+      padding: 2rem;
+    }
+
+    .card {
+      max-width: 520px;
+      width: 100%;
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 2.5rem;
       text-align: center;
     }
 
-    .glyph {
-      font-family: var(--serif);
-      font-size: 5rem;
-      font-style: italic;
-      color: var(--accent);
-      display: block;
-      margin-bottom: 1.5rem;
+    .icon {
+      font-size: 2.5rem;
+      margin-bottom: 1.25rem;
     }
 
     h1 {
-      font-family: var(--serif);
-      font-style: italic;
-      font-size: clamp(1.8rem, 4vw, 2.4rem);
-      letter-spacing: -0.02em;
-      margin-bottom: 1rem;
-    }
-
-    .sub {
-      font-size: 0.82rem;
-      line-height: 1.7;
-      color: var(--muted);
-      max-width: 480px;
-      margin-bottom: 0.4rem;
-    }
-
-    .status {
-      margin-top: 2rem;
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .status.ok    { color: #2D7D46; }
-    .status.error { color: var(--accent); }
-
-    .spinner {
-      width: 22px;
-      height: 22px;
-      border: 2px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 1.5rem auto 0;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .btn {
-      display: inline-block;
-      margin-top: 2rem;
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.05em;
-      text-decoration: none;
-      padding: 0.55rem 1.25rem;
-      border-radius: 2px;
-      background: var(--ink);
-      color: var(--bg);
-      transition: background 0.15s;
-    }
-
-    .btn:hover { background: var(--accent); }
-
-    .install-block {
-      margin-top: 2.5rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      padding: 1.25rem 1.75rem;
-      text-align: left;
-      max-width: 480px;
-      width: 100%;
-    }
-
-    .install-label {
-      font-size: 0.62rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--accent);
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #fff;
       margin-bottom: 0.6rem;
     }
 
-    .install-code {
+    .tool-name {
+      font-family: monospace;
+      font-size: 1rem;
+      color: #888;
+      margin-bottom: 1.75rem;
+    }
+
+    .steps {
+      text-align: left;
+      background: #0d0d0d;
+      border: 1px solid #1e1e1e;
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .steps p {
+      font-size: 0.875rem;
+      color: #aaa;
+      line-height: 1.7;
+    }
+
+    .steps strong {
+      color: #e5e5e5;
+    }
+
+    .steps a {
+      color: #7c9ef8;
+      text-decoration: none;
+    }
+
+    .steps a:hover {
+      text-decoration: underline;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 0.25rem;
       font-size: 0.8rem;
-      color: var(--ink);
-      line-height: 1.8;
+      color: #555;
+      text-decoration: none;
+      transition: color 0.15s;
     }
 
-    .install-code code {
-      background: var(--bg);
-      padding: 0.1rem 0.35rem;
-      border-radius: 2px;
-      border: 1px solid var(--border);
-    }
-
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 2rem 0;
-      font-size: 0.68rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
+    .back:hover { color: #888; }
   </style>
 </head>
 <body>
+  <div class="card">
+    <div class="icon">✓</div>
+    <h1>Payment successful</h1>
+    <p class="tool-name" id="tool-label">µ micro</p>
 
-<header>
-  <a class="brand" href="/"><em>µ</em> micro</a>
-</header>
+    <div class="steps">
+      <p>
+        <strong>Your receipt</strong> is on its way from Stripe.<br /><br />
+        <strong>To get your tool:</strong> reply to the receipt email or email
+        <a href="mailto:anishpunati@gmail.com">anishpunati@gmail.com</a>
+        with your order — you'll get GitHub access within a few hours.<br /><br />
+        <strong>Questions?</strong> Same address.
+      </p>
+    </div>
 
-<main>
-  <span class="glyph">µ</span>
-  <h1 id="heading">Thank you for your purchase.</h1>
-  <p class="sub">Your download is preparing — it will start automatically in a moment.</p>
-  <p class="sub">A receipt was sent to your email by Stripe.</p>
-
-  <div class="spinner" id="spinner"></div>
-  <p class="status" id="status">Verifying payment…</p>
-
-  <div class="install-block" id="install-block" style="display:none">
-    <p class="install-label">After extracting the zip</p>
-    <p class="install-code">
-      Unzip, then run <code>npm install -g .</code> inside the folder<br>
-      to install the tool globally on your machine.
-    </p>
+    <a class="back" href="/">← back to µ micro</a>
   </div>
 
-  <a href="/" class="btn" id="back-btn" style="display:none">← back to µ micro</a>
-</main>
-
-<footer>µ micro · built by anish punati</footer>
-
-<script>
-  const params    = new URLSearchParams(location.search);
-  const slug      = params.get('tool');
-  const sessionId = params.get('session_id');
-
-  const spinner      = document.getElementById('spinner');
-  const statusEl     = document.getElementById('status');
-  const backBtn      = document.getElementById('back-btn');
-  const installBlock = document.getElementById('install-block');
-
-  function done(ok, msg) {
-    spinner.style.display = 'none';
-    statusEl.textContent  = msg;
-    statusEl.className    = ok ? 'status ok' : 'status error';
-    backBtn.style.display = 'inline-block';
-  }
-
-  async function startDownload() {
-    if (!slug || !sessionId) {
-      done(false, 'Missing parameters — please return to the store and try your purchase again.');
-      return;
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const tool = params.get('tool');
+    if (tool) {
+      document.getElementById('tool-label').textContent = tool;
+      document.title = `${tool} — purchase successful`;
     }
-
-    statusEl.textContent = 'Verifying payment…';
-
-    let res;
-    try {
-      res = await fetch(
-        `/api/download?tool=${encodeURIComponent(slug)}&session_id=${encodeURIComponent(sessionId)}`
-      );
-    } catch {
-      done(false, 'Network error — please try refreshing this page.');
-      return;
-    }
-
-    if (!res.ok) {
-      const body = await res.json().catch(() => ({}));
-      done(false, body.error || `Error ${res.status} — please email support.`);
-      return;
-    }
-
-    statusEl.textContent = 'Download starting…';
-
-    const blob  = await res.blob();
-    const url   = URL.createObjectURL(blob);
-    const a     = document.createElement('a');
-    a.href      = url;
-    a.download  = `${slug}-source.zip`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-
-    installBlock.style.display = 'block';
-    done(true, 'Download started ✓');
-  }
-
-  startDownload();
-</script>
+  </script>
 </body>
 </html>
