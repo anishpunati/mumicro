@@ -614,13 +614,26 @@
   }
 
   function effectivePrice(tool) {
-    if (!tool.price) return `$${MIN_PRICE.toFixed(2)}`;
-    const num = parseFloat(tool.price.replace(/[^0-9.]/g, ''));
-    if (isNaN(num) || num < MIN_PRICE) return `$${MIN_PRICE.toFixed(2)}`;
-    return tool.price;
+    const raw = parseFloat(tool.price);
+    if (isNaN(raw) || raw < MIN_PRICE) return `$${MIN_PRICE.toFixed(2)}`;
+    return `$${raw.toFixed(2)}`;
   }
 
-  function renderCard(tool) {
+  // Normalise field names — task writes slug/github/payUrl/npm;
+  // legacy entries may use name/github_url/payment_url
+  function normalise(t) {
+    return {
+      ...t,
+      name:        t.name        || t.slug       || '(unnamed)',
+      github_url:  t.github_url  || t.github     || null,
+      npm_url:     t.npm_url     || t.npm        || null,
+      live_url:    t.live_url                    || null,
+      payment_url: t.payment_url || t.payUrl     || null,
+    };
+  }
+
+  function renderCard(raw) {
+    const tool = normalise(raw);
     const card = document.createElement('article');
     card.className = 'card';
     card.setAttribute('tabindex', '0');
@@ -628,19 +641,18 @@
     card.setAttribute('aria-label', `Open details for ${tool.name}`);
 
     const links = [];
+    if (tool.npm_url)    links.push(`<a class="link" href="${tool.npm_url}"    target="_blank" rel="noopener" onclick="event.stopPropagation()">⊡ npm</a>`);
     if (tool.github_url) links.push(`<a class="link" href="${tool.github_url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">⌥ github</a>`);
     if (tool.live_url)   links.push(`<a class="link" href="${tool.live_url}"   target="_blank" rel="noopener" onclick="event.stopPropagation()">⊹ live</a>`);
 
-    // Always show subscribe link
     links.push(`<a class="link link-sub" href="${SUBSCRIPTION_URL}" target="_blank" rel="noopener" onclick="event.stopPropagation()">pass →</a>`);
 
-    // Individual buy — always shown, enforce $2.99 minimum
-    const price = effectivePrice(tool);
+    const price  = effectivePrice(tool);
     const payUrl = tool.payment_url || SUBSCRIPTION_URL;
     links.push(`<a class="link link-buy" href="${payUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">buy · ${price} →</a>`);
 
     const tags = (tool.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
-    const cat  = CATEGORY_LABELS[tool.category] || tool.category || 'tool';
+    const cat  = CATEGORY_LABELS[tool.category] || tool.category || 'cli';
 
     card.innerHTML = `
       <div class="card-meta">
@@ -654,62 +666,55 @@
       <span class="card-hint">click for details →</span>
     `;
 
-    card.addEventListener('click', () => openDetail(tool));
-    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDetail(tool); } });
+    card.addEventListener('click', () => openDetail(raw));
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDetail(raw); } });
 
     return card;
   }
 
-  function openDetail(tool) {
-    const cat   = CATEGORY_LABELS[tool.category] || tool.category || 'tool';
-    const price = effectivePrice(tool);
+  function openDetail(raw) {
+    const tool   = normalise(raw);
+    const cat    = CATEGORY_LABELS[tool.category] || tool.category || 'cli';
+    const price  = effectivePrice(tool);
     const payUrl = tool.payment_url || SUBSCRIPTION_URL;
 
     document.getElementById('modal-cat').textContent   = `${cat} · ${formatDate(tool.date)}`;
     document.getElementById('modal-title').textContent = tool.name;
     document.getElementById('modal-desc').textContent  = tool.description;
 
-    // Build body sections
     const body = document.getElementById('modal-body');
     body.innerHTML = '';
 
     const sections = [
-      { label: 'The Problem',  key: 'problem'  },
-      { label: 'The Solution', key: 'solution' },
-      { label: 'The Method',   key: 'method'   },
+      { label: 'Why this tool',  key: 'thought_process', fallback: 'No build notes were recorded for this tool.' },
+      { label: 'The Problem',    key: 'problem'  },
+      { label: 'The Solution',   key: 'solution' },
+      { label: 'The Method',     key: 'method'   },
     ];
 
     let first = true;
-    sections.forEach(({ label, key }) => {
-      if (!tool[key]) return;
+    sections.forEach(({ label, key, fallback }) => {
+      const text = tool[key] || (fallback && first && key === 'thought_process' ? fallback : null);
+      if (!text) return;
       if (!first) {
         const div = document.createElement('div');
         div.className = 'modal-divider';
         body.appendChild(div);
       }
       first = false;
+      const isPlaceholder = !tool[key];
       const sec = document.createElement('div');
       sec.className = 'modal-section';
       sec.innerHTML = `
         <span class="modal-section-label">${label}</span>
-        <p class="modal-section-text">${tool[key]}</p>
+        <p class="modal-section-text"${isPlaceholder ? ' style="color:var(--muted);font-style:italic"' : ''}>${text}</p>
       `;
       body.appendChild(sec);
     });
 
-    if (first) {
-      // No problem/solution/method — show a placeholder
-      const sec = document.createElement('div');
-      sec.className = 'modal-section';
-      sec.innerHTML = `<p class="modal-section-text" style="color:var(--muted);font-style:italic">No design notes yet.</p>`;
-      body.appendChild(sec);
-    }
-
-    // Tags
     const tagsEl = document.getElementById('modal-tags');
     tagsEl.innerHTML = (tool.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
 
-    // Actions
     const actions = document.getElementById('modal-actions');
     actions.innerHTML = '';
 
@@ -720,6 +725,16 @@
       a.target = '_blank';
       a.rel = 'noopener';
       a.textContent = '⊹ live demo';
+      actions.appendChild(a);
+    }
+
+    if (tool.npm_url) {
+      const a = document.createElement('a');
+      a.className = 'btn btn-ghost';
+      a.href = tool.npm_url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.textContent = '⊡ npm';
       actions.appendChild(a);
     }
 
