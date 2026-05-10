@@ -613,9 +613,9 @@
     return `${months}mo ago`;
   }
 
-  function effectivePrice(tool) {
+  function displayPrice(tool) {
     const raw = parseFloat(tool.price);
-    if (isNaN(raw) || raw < MIN_PRICE) return `$${MIN_PRICE.toFixed(2)}`;
+    if (isNaN(raw) || raw <= 0) return null; // no price stored
     return `$${raw.toFixed(2)}`;
   }
 
@@ -647,9 +647,12 @@
 
     links.push(`<a class="link link-sub" href="${SUBSCRIPTION_URL}" target="_blank" rel="noopener" onclick="event.stopPropagation()">pass →</a>`);
 
-    const price  = effectivePrice(tool);
-    const payUrl = tool.payment_url || SUBSCRIPTION_URL;
-    links.push(`<a class="link link-buy" href="${payUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">buy · ${price} →</a>`);
+    // Only show buy button if there's an actual price AND a dedicated payment link
+    const price  = displayPrice(tool);
+    const payUrl = tool.payment_url;
+    if (price && payUrl) {
+      links.push(`<a class="link link-buy" href="${payUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">buy · ${price} →</a>`);
+    }
 
     const tags = (tool.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
     const cat  = CATEGORY_LABELS[tool.category] || tool.category || 'cli';
@@ -675,8 +678,8 @@
   function openDetail(raw) {
     const tool   = normalise(raw);
     const cat    = CATEGORY_LABELS[tool.category] || tool.category || 'cli';
-    const price  = effectivePrice(tool);
-    const payUrl = tool.payment_url || SUBSCRIPTION_URL;
+    const price  = displayPrice(tool);
+    const payUrl = tool.payment_url;
 
     document.getElementById('modal-cat').textContent   = `${cat} · ${formatDate(tool.date)}`;
     document.getElementById('modal-title').textContent = tool.name;
@@ -756,13 +759,15 @@
     subBtn.textContent = 'µ pass · $15/mo';
     actions.appendChild(subBtn);
 
-    const buyBtn = document.createElement('a');
-    buyBtn.className = 'btn btn-primary';
-    buyBtn.href = payUrl;
-    buyBtn.target = '_blank';
-    buyBtn.rel = 'noopener';
-    buyBtn.textContent = `buy · ${price}`;
-    actions.appendChild(buyBtn);
+    if (price && payUrl) {
+      const buyBtn = document.createElement('a');
+      buyBtn.className = 'btn btn-primary';
+      buyBtn.href = payUrl;
+      buyBtn.target = '_blank';
+      buyBtn.rel = 'noopener';
+      buyBtn.textContent = `buy · ${price}`;
+      actions.appendChild(buyBtn);
+    }
 
     const overlay = document.getElementById('modal-overlay');
     overlay.classList.add('open');
