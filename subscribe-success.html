@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>µ — You're subscribed</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #F4F3EF; --surface: #FDFCF8; --ink: #1A1917;
+      --muted: #9A9790; --accent: #C8410A; --border: #E2E0D8;
+      --mono: 'JetBrains Mono', monospace;
+      --serif: 'Instrument Serif', Georgia, serif;
+    }
+    html { font-size: 16px; }
+    body {
+      background: var(--bg); color: var(--ink); font-family: var(--mono);
+      min-height: 100vh; display: flex; flex-direction: column;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+    }
+    header {
+      display: flex; align-items: baseline;
+      padding: 3.5rem 0 1.25rem; border-bottom: 1px solid var(--border);
+    }
+    .brand {
+      font-family: var(--serif); font-size: clamp(2.8rem, 6vw, 4.5rem);
+      line-height: 1; letter-spacing: -0.02em; color: var(--ink); text-decoration: none;
+    }
+    .brand em { font-style: italic; color: var(--accent); }
+    main {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 5rem 0; text-align: center;
+    }
+    .glyph {
+      font-family: var(--serif); font-size: 5rem; font-style: italic;
+      color: var(--accent); display: block; margin-bottom: 1.5rem;
+    }
+    h1 {
+      font-family: var(--serif); font-style: italic;
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      letter-spacing: -0.02em; margin-bottom: 1rem;
+    }
+    .sub {
+      font-size: 0.82rem; line-height: 1.7; color: var(--muted);
+      max-width: 480px; margin-bottom: 0.4rem;
+    }
+    .card {
+      margin-top: 2.5rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 3px; padding: 1.75rem 2rem;
+      max-width: 480px; width: 100%; text-align: left;
+    }
+    .card-label {
+      font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.75rem;
+    }
+    .card p {
+      font-size: 0.82rem; line-height: 1.7; color: var(--ink); margin-bottom: 1rem;
+    }
+    .card p:last-child { margin-bottom: 0; }
+    .btn {
+      display: inline-block; margin-top: 2rem;
+      font-family: var(--mono); font-size: 0.72rem;
+      letter-spacing: 0.05em; text-decoration: none;
+      padding: 0.55rem 1.25rem; border-radius: 2px;
+      background: var(--ink); color: var(--bg); transition: background 0.15s;
+    }
+    .btn:hover { background: var(--accent); }
+    .btn-outline {
+      background: transparent; color: var(--accent);
+      border: 1px solid var(--accent); margin-left: 0.75rem;
+    }
+    .btn-outline:hover { background: var(--accent); color: var(--bg); }
+    footer {
+      border-top: 1px solid var(--border); padding: 2rem 0;
+      font-size: 0.68rem; letter-spacing: 0.05em;
+      text-transform: uppercase; color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+<header>
+  <a class="brand" href="/"><em>µ</em> micro</a>
+</header>
+
+<main>
+  <span class="glyph">µ</span>
+  <h1>Welcome to µ micro Pass.</h1>
+  <p class="sub">Your subscription is active. You now have unlimited access to every tool — current and future.</p>
+  <p class="sub">Stripe sent a receipt to your email.</p>
+
+  <div class="card">
+    <p class="card-label">How to download tools</p>
+    <p>Visit the <strong>subscriber hub</strong> and enter the email address you used to subscribe. You'll see every tool available for download — no individual purchases needed.</p>
+    <p>Your subscription renews monthly. To manage billing or cancel, use the link in your Stripe receipt.</p>
+  </div>
+
+  <div>
+    <a href="/hub.html" class="btn">Go to subscriber hub →</a>
+    <a href="/" class="btn btn-outline">← back to µ micro</a>
+  </div>
+</main>
+
+<footer>µ micro · built by anish punati</footer>
+</body>
+</html>

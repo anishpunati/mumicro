@@ -1,19 +1,28 @@
 // Vercel serverless function: /api/download
-// Usage: GET /api/download?tool=<slug>&session_id=<stripe_session_id>
+//
+// Two auth modes:
+//
+//   Individual purchase:
+//     GET /api/download?tool=<slug>&session_id=<stripe_session_id>
+//
+//   Subscriber (µ micro Pass):
+//     GET /api/download?tool=<slug>&email=<email>&mode=sub
 //
 // Required Vercel environment variables:
-//   STRIPE_SECRET    — Stripe secret key (sk_live_... or sk_test_...)
-//   GITHUB_TOKEN     — GitHub personal access token with repo scope (for private repos)
+//   STRIPE_SECRET    — Stripe secret key (sk_live_...)
+//   GITHUB_TOKEN     — GitHub personal access token with repo scope
 //   GITHUB_USERNAME  — GitHub username (default: anishpunati)
 
 module.exports = async function handler(req, res) {
-  const { tool: slug, session_id } = req.query;
+  const { tool: slug, session_id, email, mode } = req.query;
 
-  if (!slug || !session_id) {
-    return res.status(400).json({ error: 'Missing tool or session_id parameters.' });
+  if (!slug) {
+    return res.status(400).json({ error: 'Missing tool parameter.' });
   }
 
-  // ── 1. Load tools.json from the live repo ──────────────────────────────────
+  const auth = 'Basic ' + Buffer.from(process.env.STRIPE_SECRET + ':').toString('base64');
+
+  // ── Load tools.json from the live repo ──────────────────────────────────────
   const toolsRes = await fetch(
     'https://raw.githubusercontent.com/anishpunati/mumicro/main/tools.json',
     { headers: { 'User-Agent': 'mumicro-download/1.0' } }
@@ -27,33 +36,63 @@ module.exports = async function handler(req, res) {
     return res.status(404).json({ error: `Tool "${slug}" not found.` });
   }
 
-  // ── 2. Verify Stripe session ───────────────────────────────────────────────
-  const stripeRes = await fetch(
-    `https://api.stripe.com/v1/checkout/sessions/${session_id}`,
-    {
-      headers: {
-        Authorization: 'Basic ' + Buffer.from(process.env.STRIPE_SECRET + ':').toString('base64'),
-      },
+  // ── Auth: subscriber mode ────────────────────────────────────────────────────
+  if (mode === 'sub') {
+    if (!email || !email.includes('@')) {
+      return res.status(400).json({ error: 'Valid email required for subscriber downloads.' });
     }
-  );
-  if (!stripeRes.ok) {
-    return res.status(400).json({ error: 'Invalid or expired session.' });
-  }
-  const session = await stripeRes.json();
 
-  if (session.payment_status !== 'paid') {
-    return res.status(402).json({ error: 'Payment not completed.' });
+    const custRes = await fetch(
+      `https://api.stripe.com/v1/customers?email=${encodeURIComponent(email)}&limit=10`,
+      { headers: { Authorization: auth } }
+    );
+    if (!custRes.ok) {
+      return res.status(500).json({ error: 'Could not verify subscription.' });
+    }
+    const custData = await custRes.json();
+    let isSubscriber = false;
+
+    for (const customer of (custData.data || [])) {
+      const subRes = await fetch(
+        `https://api.stripe.com/v1/subscriptions?customer=${customer.id}&status=active&limit=5`,
+        { headers: { Authorization: auth } }
+      );
+      if (!subRes.ok) continue;
+      const subData = await subRes.json();
+      if (subData.data && subData.data.length > 0) { isSubscriber = true; break; }
+    }
+
+    if (!isSubscriber) {
+      return res.status(403).json({ error: 'No active µ micro subscription found for this email.' });
+    }
+
+  // ── Auth: individual purchase mode ──────────────────────────────────────────
+  } else {
+    if (!session_id) {
+      return res.status(400).json({ error: 'Missing session_id parameter.' });
+    }
+
+    const sessionRes = await fetch(
+      `https://api.stripe.com/v1/checkout/sessions/${session_id}`,
+      { headers: { Authorization: auth } }
+    );
+    if (!sessionRes.ok) {
+      return res.status(400).json({ error: 'Invalid or expired session.' });
+    }
+    const session = await sessionRes.json();
+
+    if (session.payment_status !== 'paid') {
+      return res.status(402).json({ error: 'Payment not completed.' });
+    }
+
+    // Verify the payment was specifically for this tool (if paymentLinkId is stored)
+    const storedLinkId = tool.paymentLinkId || tool.stripeLinkId;
+    if (storedLinkId && session.payment_link && session.payment_link !== storedLinkId) {
+      return res.status(403).json({ error: 'This purchase was for a different tool.' });
+    }
   }
 
-  // ── 3. Verify the payment was for THIS tool ────────────────────────────────
-  // paymentLinkId is stored in tools.json when the tool is built.
-  // If it's not present yet (legacy tools), we skip the check.
-  const storedLinkId = tool.paymentLinkId || tool.stripeLinkId;
-  if (storedLinkId && session.payment_link && session.payment_link !== storedLinkId) {
-    return res.status(403).json({ error: 'This purchase was for a different tool.' });
-  }
-
-  // ── 4. Fetch the private repo zip from GitHub ──────────────────────────────
+  // ── Fetch private repo zip from GitHub ──────────────────────────────────────
   const owner  = process.env.GITHUB_USERNAME || 'anishpunati';
   const zipRes = await fetch(
     `https://api.github.com/repos/${owner}/${slug}/zipball/main`,
@@ -72,7 +111,6 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: 'Failed to retrieve source archive. Please contact support.' });
   }
 
-  // ── 5. Stream zip to the buyer ─────────────────────────────────────────────
   const zip = await zipRes.arrayBuffer();
   res.setHeader('Content-Type', 'application/zip');
   res.setHeader('Content-Disposition', `attachment; filename="${slug}-source.zip"`);
