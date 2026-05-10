@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>µ — Download your tool</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #F4F3EF;
+      --surface: #FDFCF8;
+      --ink:     #1A1917;
+      --muted:   #9A9790;
+      --accent:  #C8410A;
+      --border:  #E2E0D8;
+      --mono:    'JetBrains Mono', monospace;
+      --serif:   'Instrument Serif', Georgia, serif;
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--mono);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+    }
+
+    header {
+      display: flex;
+      align-items: baseline;
+      padding: 3.5rem 0 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      font-family: var(--serif);
+      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .brand em { font-style: italic; color: var(--accent); }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem 0;
+      text-align: center;
+    }
+
+    .glyph {
+      font-family: var(--serif);
+      font-size: 5rem;
+      font-style: italic;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .sub {
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 480px;
+      margin-bottom: 0.4rem;
+    }
+
+    .status {
+      margin-top: 2rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .status.ok    { color: #2D7D46; }
+    .status.error { color: var(--accent); }
+
+    .spinner {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 1.5rem auto 0;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .btn {
+      display: inline-block;
+      margin-top: 2rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      padding: 0.55rem 1.25rem;
+      border-radius: 2px;
+      background: var(--ink);
+      color: var(--bg);
+      transition: background 0.15s;
+    }
+
+    .btn:hover { background: var(--accent); }
+
+    .install-block {
+      margin-top: 2.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1.25rem 1.75rem;
+      text-align: left;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    .install-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    .install-code {
+      font-size: 0.8rem;
+      color: var(--ink);
+      line-height: 1.8;
+    }
+
+    .install-code code {
+      background: var(--bg);
+      padding: 0.1rem 0.35rem;
+      border-radius: 2px;
+      border: 1px solid var(--border);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      font-size: 0.68rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="brand" href="/"><em>µ</em> micro</a>
+</header>
+
+<main>
+  <span class="glyph">µ</span>
+  <h1 id="heading">Thank you for your purchase.</h1>
+  <p class="sub">Your download is preparing — it will start automatically in a moment.</p>
+  <p class="sub">A receipt was sent to your email by Stripe.</p>
+
+  <div class="spinner" id="spinner"></div>
+  <p class="status" id="status">Verifying payment…</p>
+
+  <div class="install-block" id="install-block" style="display:none">
+    <p class="install-label">After extracting the zip</p>
+    <p class="install-code">
+      Unzip, then run <code>npm install -g .</code> inside the folder<br>
+      to install the tool globally on your machine.
+    </p>
+  </div>
+
+  <a href="/" class="btn" id="back-btn" style="display:none">← back to µ micro</a>
+</main>
+
+<footer>µ micro · built by anish punati</footer>
+
+<script>
+  const params    = new URLSearchParams(location.search);
+  const slug      = params.get('tool');
+  const sessionId = params.get('session_id');
+
+  const spinner      = document.getElementById('spinner');
+  const statusEl     = document.getElementById('status');
+  const backBtn      = document.getElementById('back-btn');
+  const installBlock = document.getElementById('install-block');
+
+  function done(ok, msg) {
+    spinner.style.display = 'none';
+    statusEl.textContent  = msg;
+    statusEl.className    = ok ? 'status ok' : 'status error';
+    backBtn.style.display = 'inline-block';
+  }
+
+  async function startDownload() {
+    if (!slug || !sessionId) {
+      done(false, 'Missing parameters — please return to the store and try your purchase again.');
+      return;
+    }
+
+    statusEl.textContent = 'Verifying payment…';
+
+    let res;
+    try {
+      res = await fetch(
+        `/api/download?tool=${encodeURIComponent(slug)}&session_id=${encodeURIComponent(sessionId)}`
+      );
+    } catch {
+      done(false, 'Network error — please try refreshing this page.');
+      return;
+    }
+
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      done(false, body.error || `Error ${res.status} — please email support.`);
+      return;
+    }
+
+    statusEl.textContent = 'Download starting…';
+
+    const blob  = await res.blob();
+    const url   = URL.createObjectURL(blob);
+    const a     = document.createElement('a');
+    a.href      = url;
+    a.download  = `${slug}-source.zip`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+
+    installBlock.style.display = 'block';
+    done(true, 'Download started ✓');
+  }
+
+  startDownload();
+</script>
+</body>
+</html>

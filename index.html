@@ -641,8 +641,6 @@
     card.setAttribute('aria-label', `Open details for ${tool.name}`);
 
     const links = [];
-    if (tool.npm_url)    links.push(`<a class="link" href="${tool.npm_url}"    target="_blank" rel="noopener" onclick="event.stopPropagation()">⊡ npm</a>`);
-    if (tool.github_url) links.push(`<a class="link" href="${tool.github_url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">⌥ github</a>`);
     if (tool.live_url)   links.push(`<a class="link" href="${tool.live_url}"   target="_blank" rel="noopener" onclick="event.stopPropagation()">⊹ live</a>`);
 
     links.push(`<a class="link link-sub" href="${SUBSCRIPTION_URL}" target="_blank" rel="noopener" onclick="event.stopPropagation()">pass →</a>`);
@@ -728,26 +726,6 @@
       a.target = '_blank';
       a.rel = 'noopener';
       a.textContent = '⊹ live demo';
-      actions.appendChild(a);
-    }
-
-    if (tool.npm_url) {
-      const a = document.createElement('a');
-      a.className = 'btn btn-ghost';
-      a.href = tool.npm_url;
-      a.target = '_blank';
-      a.rel = 'noopener';
-      a.textContent = '⊡ npm';
-      actions.appendChild(a);
-    }
-
-    if (tool.github_url) {
-      const a = document.createElement('a');
-      a.className = 'btn btn-ghost';
-      a.href = tool.github_url;
-      a.target = '_blank';
-      a.rel = 'noopener';
-      a.textContent = '⌥ source';
       actions.appendChild(a);
     }
 
