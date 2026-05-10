@@ -166,6 +166,7 @@
       transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
       position: relative;
       overflow: hidden;
+      cursor: pointer;
     }
 
     .card::before {
@@ -269,6 +270,194 @@
 
     .link-buy:hover { background: var(--accent) !important; }
 
+    .link-sub {
+      background: transparent;
+      color: var(--accent) !important;
+      border: 1px solid var(--accent);
+      padding: 0.3rem 0.75rem;
+      border-radius: 2px;
+      transition: background 0.15s, color 0.15s !important;
+    }
+
+    .link-sub:hover {
+      background: var(--accent) !important;
+      color: var(--bg) !important;
+    }
+
+    /* ── Detail Modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 25, 23, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      padding: clamp(1rem, 5vw, 3rem);
+      overflow-y: auto;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      width: 100%;
+      max-width: 680px;
+      margin: auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modal::before {
+      content: '';
+      display: block;
+      height: 3px;
+      background: var(--accent);
+    }
+
+    .modal-header {
+      padding: 2rem 2rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 1.1rem;
+      padding: 0;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+
+    .modal-close:hover { color: var(--ink); }
+
+    .modal-title {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-desc {
+      font-size: 0.8rem;
+      line-height: 1.65;
+      color: #5C5A55;
+    }
+
+    .modal-body {
+      padding: 1.75rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .modal-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .modal-section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .modal-section-text {
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: var(--ink);
+    }
+
+    .modal-divider {
+      height: 1px;
+      background: var(--border);
+    }
+
+    .modal-footer {
+      padding: 1.25rem 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .modal-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      flex: 1;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 0.65rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      padding: 0.55rem 1.1rem;
+      border-radius: 2px;
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s, opacity 0.15s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .btn-primary:hover { background: var(--accent); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .btn-outline:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover { color: var(--ink); border-color: var(--ink); }
+
     /* ── Empty state ── */
     .empty {
       grid-column: 1 / -1;
@@ -326,6 +515,18 @@
     .card.loading .card-meta { color: transparent; }
 
     .card.loading .card-name  { background: var(--border); border-radius: 2px; }
+
+    /* ── Tap hint on cards ── */
+    .card-hint {
+      font-size: 0.62rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .card:hover .card-hint { opacity: 1; }
   </style>
 </head>
 <body>
@@ -342,9 +543,9 @@
 <div class="sub-banner">
   <div class="sub-banner-text">
     <span class="sub-label">µ micro Pass</span>
-    Unlimited access to every tool, forever — past and future.
+    Unlimited access to every tool, past and future — one flat rate.
   </div>
-  <a href="https://buy.stripe.com/8x23cv6jb3oNf5U8t377O00" id="subscribe-btn" class="sub-cta">Subscribe — $10 / month →</a>
+  <a href="https://buy.stripe.com/8x23cv6jb3oNf5U8t377O00" id="subscribe-btn" class="sub-cta">Subscribe — $15 / month →</a>
 </div>
 
 <div class="stats">
@@ -357,19 +558,35 @@
   <!-- populated by JS -->
 </main>
 
+<!-- Detail Modal -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-meta">
+        <span id="modal-cat"></span>
+        <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+      </div>
+      <h2 class="modal-title" id="modal-title"></h2>
+      <p class="modal-desc" id="modal-desc"></p>
+    </div>
+    <div class="modal-body" id="modal-body">
+      <!-- sections injected by JS -->
+    </div>
+    <div class="modal-footer">
+      <div class="modal-tags" id="modal-tags"></div>
+      <div class="modal-actions" id="modal-actions"></div>
+    </div>
+  </div>
+</div>
+
 <footer>
   <span>µ micro · built by <a href="https://github.com/anishpunati">anish punati</a></span>
   <span id="footer-updated"></span>
 </footer>
 
 <script>
-  const ICONS = {
-    github:    '⌥ github',
-    live:      '⊹ live',
-    npm:       '⬡ npm',
-    buy:       'buy →',
-    default:   '↗',
-  };
+  const SUBSCRIPTION_URL = 'https://buy.stripe.com/8x23cv6jb3oNf5U8t377O00';
+  const MIN_PRICE = 2.99;
 
   const CATEGORY_LABELS = {
     cli:        'CLI',
@@ -396,15 +613,31 @@
     return `${months}mo ago`;
   }
 
+  function effectivePrice(tool) {
+    if (!tool.price) return `$${MIN_PRICE.toFixed(2)}`;
+    const num = parseFloat(tool.price.replace(/[^0-9.]/g, ''));
+    if (isNaN(num) || num < MIN_PRICE) return `$${MIN_PRICE.toFixed(2)}`;
+    return tool.price;
+  }
+
   function renderCard(tool) {
     const card = document.createElement('article');
     card.className = 'card';
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', `Open details for ${tool.name}`);
 
     const links = [];
-    if (tool.github_url) links.push(`<a class="link" href="${tool.github_url}" target="_blank" rel="noopener">⌥ github</a>`);
-    if (tool.live_url)   links.push(`<a class="link" href="${tool.live_url}"   target="_blank" rel="noopener">⊹ live</a>`);
-    if (tool.npm_url)    links.push(`<a class="link" href="${tool.npm_url}"    target="_blank" rel="noopener">⬡ npm</a>`);
-    if (tool.payment_url) links.push(`<a class="link link-buy" href="${tool.payment_url}" target="_blank" rel="noopener">buy ${tool.price ? '· ' + tool.price : ''} →</a>`);
+    if (tool.github_url) links.push(`<a class="link" href="${tool.github_url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">⌥ github</a>`);
+    if (tool.live_url)   links.push(`<a class="link" href="${tool.live_url}"   target="_blank" rel="noopener" onclick="event.stopPropagation()">⊹ live</a>`);
+
+    // Always show subscribe link
+    links.push(`<a class="link link-sub" href="${SUBSCRIPTION_URL}" target="_blank" rel="noopener" onclick="event.stopPropagation()">pass →</a>`);
+
+    // Individual buy — always shown, enforce $2.99 minimum
+    const price = effectivePrice(tool);
+    const payUrl = tool.payment_url || SUBSCRIPTION_URL;
+    links.push(`<a class="link link-buy" href="${payUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">buy · ${price} →</a>`);
 
     const tags = (tool.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
     const cat  = CATEGORY_LABELS[tool.category] || tool.category || 'tool';
@@ -417,10 +650,123 @@
       <h2 class="card-name">${tool.name}</h2>
       <p class="card-desc">${tool.description}</p>
       ${tags ? `<div class="card-tags">${tags}</div>` : ''}
-      <div class="card-links">${links.join('') || '<span style="font-size:.7rem;color:var(--muted)">coming soon</span>'}</div>
+      <div class="card-links">${links.join('')}</div>
+      <span class="card-hint">click for details →</span>
     `;
+
+    card.addEventListener('click', () => openDetail(tool));
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDetail(tool); } });
+
     return card;
   }
+
+  function openDetail(tool) {
+    const cat   = CATEGORY_LABELS[tool.category] || tool.category || 'tool';
+    const price = effectivePrice(tool);
+    const payUrl = tool.payment_url || SUBSCRIPTION_URL;
+
+    document.getElementById('modal-cat').textContent   = `${cat} · ${formatDate(tool.date)}`;
+    document.getElementById('modal-title').textContent = tool.name;
+    document.getElementById('modal-desc').textContent  = tool.description;
+
+    // Build body sections
+    const body = document.getElementById('modal-body');
+    body.innerHTML = '';
+
+    const sections = [
+      { label: 'The Problem',  key: 'problem'  },
+      { label: 'The Solution', key: 'solution' },
+      { label: 'The Method',   key: 'method'   },
+    ];
+
+    let first = true;
+    sections.forEach(({ label, key }) => {
+      if (!tool[key]) return;
+      if (!first) {
+        const div = document.createElement('div');
+        div.className = 'modal-divider';
+        body.appendChild(div);
+      }
+      first = false;
+      const sec = document.createElement('div');
+      sec.className = 'modal-section';
+      sec.innerHTML = `
+        <span class="modal-section-label">${label}</span>
+        <p class="modal-section-text">${tool[key]}</p>
+      `;
+      body.appendChild(sec);
+    });
+
+    if (first) {
+      // No problem/solution/method — show a placeholder
+      const sec = document.createElement('div');
+      sec.className = 'modal-section';
+      sec.innerHTML = `<p class="modal-section-text" style="color:var(--muted);font-style:italic">No design notes yet.</p>`;
+      body.appendChild(sec);
+    }
+
+    // Tags
+    const tagsEl = document.getElementById('modal-tags');
+    tagsEl.innerHTML = (tool.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
+
+    // Actions
+    const actions = document.getElementById('modal-actions');
+    actions.innerHTML = '';
+
+    if (tool.live_url) {
+      const a = document.createElement('a');
+      a.className = 'btn btn-ghost';
+      a.href = tool.live_url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.textContent = '⊹ live demo';
+      actions.appendChild(a);
+    }
+
+    if (tool.github_url) {
+      const a = document.createElement('a');
+      a.className = 'btn btn-ghost';
+      a.href = tool.github_url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.textContent = '⌥ source';
+      actions.appendChild(a);
+    }
+
+    const subBtn = document.createElement('a');
+    subBtn.className = 'btn btn-outline';
+    subBtn.href = SUBSCRIPTION_URL;
+    subBtn.target = '_blank';
+    subBtn.rel = 'noopener';
+    subBtn.textContent = 'µ pass · $15/mo';
+    actions.appendChild(subBtn);
+
+    const buyBtn = document.createElement('a');
+    buyBtn.className = 'btn btn-primary';
+    buyBtn.href = payUrl;
+    buyBtn.target = '_blank';
+    buyBtn.rel = 'noopener';
+    buyBtn.textContent = `buy · ${price}`;
+    actions.appendChild(buyBtn);
+
+    const overlay = document.getElementById('modal-overlay');
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('modal-close').focus();
+  }
+
+  function closeDetail() {
+    document.getElementById('modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('modal-close').addEventListener('click', closeDetail);
+  document.getElementById('modal-overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('modal-overlay')) closeDetail();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeDetail();
+  });
 
   function renderEmpty() {
     const el = document.createElement('div');
