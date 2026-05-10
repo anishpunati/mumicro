@@ -1,1 +1,19 @@
-[]
+[
+  {
+    "id": "tool-2026-05-09",
+    "name": "gh-cost",
+    "slug": "gh-cost",
+    "date": "2026-05-09",
+    "description": "GitHub Actions cost estimator \u2014 per-workflow breakdown, CSV export",
+    "category": "developer-tools",
+    "github_url": "https://github.com/anishpunati/gh-cost",
+    "npm_url": "https://www.npmjs.com/package/gh-cost",
+    "tags": [
+      "github",
+      "ci",
+      "devops",
+      "cli",
+      "cost"
+    ]
+  }
+]
