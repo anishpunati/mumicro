@@ -1,5 +1,18 @@
 [
   {
+    "slug": "stale-deps",
+    "description": "Scan your package.json dependencies for packages that haven't been updated in a while \u2014 spot potentially abandoned npm packages instantly.",
+    "thought_process": "Found this pain point in r/node where developers shared frustration about zombie packages that show 0 vulnerabilities but haven't been touched in years. npm outdated only compares installed version to latest, not whether the latest itself is ancient. Existing tools like npm-check have dependencies. A pure fetch-based zero-dep solution fills that gap.",
+    "problem": "Developers often don't realize their project dependencies have been abandoned \u2014 npm outdated shows version lag but not how long ago a package was last published, leaving stale and potentially vulnerable packages silently lurking in codebases.",
+    "solution": "stale-deps reads your package.json, queries the npm registry for each package's last publish date, and flags any package that hasn't been updated in over a configurable number of days.",
+    "method": "The tool reads package.json, then hits the npm registry's public JSON API (no auth, no dependencies) for each package to get its _npmPublishTime field, computes the age in days, and outputs a formatted table of stale packages sorted by staleness. Requests are batched 10 at a time.",
+    "date": "2026-05-11",
+    "github": "https://github.com/anishpunati/stale-deps",
+    "price": 4.99,
+    "payUrl": "https://buy.stripe.com/28EeVdcHz1gFcXMfVv77O06",
+    "paymentLinkId": "plink_1TVswmI2tQrvudWbZF1TzyTe"
+  },
+  {
     "slug": "dep-age",
     "description": "Show when each of your npm dependencies was last published to spot abandoned packages",
     "thought_process": "Found this pain point across multiple HN threads and r/node posts where developers complained about inheriting projects with quietly abandoned dependencies. npm outdated tells you if you're behind the latest version, but it doesn't tell you if the package itself has gone dark. No popular zero-dep CLI fills this gap \u2014 existing tools like libyear require install and configuration. This tool runs as a one-shot npx command against any package.json.",
