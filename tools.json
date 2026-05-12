@@ -1,5 +1,18 @@
 [
   {
+    "slug": "cronread",
+    "description": "Explain a cron expression in plain English and show the next N scheduled run times",
+    "thought_process": "Found recurring threads on r/devops and r/node where developers debate what cron expressions actually schedule, often resorting to crontab.guru mid-terminal-session. The most popular npm cron packages (node-cron, cron) are runtime schedulers, not expression explainers \u2014 none expose a zero-dep CLI that translates a schedule to plain English. The gap between a website you have to open and a command you can run is exactly the kind of friction a micro-tool eliminates, and cron syntax is something every developer hits regardless of stack.",
+    "problem": "Developers routinely have to leave the terminal and visit crontab.guru to verify what a cron expression actually schedules \u2014 there is no zero-dependency CLI tool that explains cron syntax and shows upcoming run times inline.",
+    "solution": "cronread parses any standard 5-field cron expression, prints a plain-English schedule description, and lists the next N trigger times in local or UTC \u2014 all in under 50ms with zero dependencies.",
+    "method": "Pure Node.js with no dependencies: parses each field (ranges, steps, lists, wildcards) into value sets, walks forward minute by minute from the current time to find the next N matching timestamps, and renders the results as clean terminal output.",
+    "date": "2026-05-12",
+    "github": "https://github.com/anishpunati/cronread",
+    "price": 3.99,
+    "payUrl": "https://buy.stripe.com/bJebJ1gXP0cB6zo6kV77O08",
+    "paymentLinkId": "plink_1TWG3oI2tQrvudWbhQzgg2DN"
+  },
+  {
     "slug": "json-check",
     "description": "Recursively validate all JSON files in a directory and report syntax errors with file and line numbers.",
     "thought_process": "Found repeated complaints on r/webdev and r/node about cryptic JSON.parse errors giving no file or line context. jsonlint solves this but has dependencies and only takes a single file \u2014 no popular zero-dep CLI covers recursive project-wide JSON validation with CI-friendly exit codes, which is what teams actually need.",
