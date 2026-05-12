@@ -1,5 +1,18 @@
 [
   {
+    "slug": "json-check",
+    "description": "Recursively validate all JSON files in a directory and report syntax errors with file and line numbers.",
+    "thought_process": "Found repeated complaints on r/webdev and r/node about cryptic JSON.parse errors giving no file or line context. jsonlint solves this but has dependencies and only takes a single file \u2014 no popular zero-dep CLI covers recursive project-wide JSON validation with CI-friendly exit codes, which is what teams actually need.",
+    "problem": "When a JSON config or data file has a syntax error, JSON.parse tells you it failed but not which file or line \u2014 you end up opening files one by one to find the typo.",
+    "solution": "json-check walks your project recursively, parses every .json file, and prints a pass/fail report with exact file path and line number of each error \u2014 exiting non-zero so it can gate CI or pre-commit hooks.",
+    "method": "Pure Node.js, zero dependencies. Uses fs.readdirSync to walk directories, JSON.parse for validation, and parses V8's error message to extract the character position and convert it to a line number.",
+    "date": "2026-05-11",
+    "github": "https://github.com/anishpunati/json-check",
+    "price": 2.99,
+    "payUrl": "https://buy.stripe.com/3cI00j9vn8J79LAcJj77O07",
+    "paymentLinkId": "plink_1TW58cI2tQrvudWb4Dd5BFnH"
+  },
+  {
     "slug": "stale-deps",
     "description": "Scan your package.json dependencies for packages that haven't been updated in a while \u2014 spot potentially abandoned npm packages instantly.",
     "thought_process": "Found this pain point in r/node where developers shared frustration about zombie packages that show 0 vulnerabilities but haven't been touched in years. npm outdated only compares installed version to latest, not whether the latest itself is ancient. Existing tools like npm-check have dependencies. A pure fetch-based zero-dep solution fills that gap.",
