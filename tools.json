@@ -1,5 +1,18 @@
 [
   {
+    "slug": "cert-peek",
+    "description": "Check SSL certificate expiry and details for any domain in seconds from your terminal",
+    "thought_process": "Found repeated threads on r/devops and r/webdev where engineers asked how to quickly check cert expiry without a monitoring service. The openssl command is hard to remember, and popular npm packages like ssl-checker require installation and have dependencies. A zero-dep npx tool that prints a clean one-screen summary fills a genuine daily-use gap for both local dev and CI pre-flight checks.",
+    "problem": "Developers and ops teams get blindsided by expired SSL certificates because checking expiry requires remembering a multi-flag openssl s_client command and parsing its dense output \u2014 so certs get forgotten until the site goes red.",
+    "solution": "cert-peek uses Node's built-in TLS stack to connect to any domain, extract certificate details, and print a color-coded summary with days-remaining and an at-a-glance status indicator.",
+    "method": "Pure Node.js using the built-in tls module \u2014 no dependencies. Opens a raw TLS socket to port 443, calls getPeerCertificate(), parses validity dates, and computes days remaining. Color-coded output and a non-zero exit code make it CI-friendly.",
+    "date": "2026-05-13",
+    "github": "https://github.com/anishpunati/cert-peek",
+    "price": 2.99,
+    "payUrl": "https://buy.stripe.com/00w6oHgXPaRf5vkcJj77O0a",
+    "paymentLinkId": "plink_1TWbWSI2tQrvudWbQV3uHAX3"
+  },
+  {
     "slug": "cronread",
     "description": "Explain a cron expression in plain English and show the next N scheduled run times",
     "thought_process": "Found recurring threads on r/devops and r/node where developers debate what cron expressions actually schedule, often resorting to crontab.guru mid-terminal-session. The most popular npm cron packages (node-cron, cron) are runtime schedulers, not expression explainers \u2014 none expose a zero-dep CLI that translates a schedule to plain English. The gap between a website you have to open and a command you can run is exactly the kind of friction a micro-tool eliminates, and cron syntax is something every developer hits regardless of stack.",
