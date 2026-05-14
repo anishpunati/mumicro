@@ -1,5 +1,18 @@
 [
   {
+    "slug": "bench-run",
+    "description": "Benchmark any shell command with min/max/avg/median timing over N runs",
+    "thought_process": "Found repeated Ask HN and r/devops threads asking how to benchmark a build script \u2014 the top answers always link to hyperfine, which requires cargo or brew. Developers who already have Node installed have no zero-dep equivalent that works via npx. The problem also shows up in CI: teams want to track whether their test suite is getting slower across PRs but have no lightweight way to do it without adding a heavy benchmarking framework.",
+    "problem": "Developers have no easy way to benchmark how long a shell command takes across multiple runs \u2014 `time` only runs once and `hyperfine` requires a Rust installation most Node developers don't have.",
+    "solution": "bench-run runs any command N times and prints min, max, average, median, and stddev timing \u2014 zero dependencies, works instantly via npx.",
+    "method": "Pure Node.js using child_process.execSync with process.hrtime.bigint() for nanosecond-precision timing; results are aggregated after all runs complete and printed as a summary table.",
+    "date": "2026-05-14",
+    "github": "https://github.com/anishpunati/bench-run",
+    "price": 2.99,
+    "payUrl": "https://buy.stripe.com/dRm00j9vncZn8HwgZz77O0b",
+    "paymentLinkId": "plink_1TWyqJI2tQrvudWbZtWWqBRk"
+  },
+  {
     "slug": "cert-peek",
     "description": "Check SSL certificate expiry and details for any domain in seconds from your terminal",
     "thought_process": "Found repeated threads on r/devops and r/webdev where engineers asked how to quickly check cert expiry without a monitoring service. The openssl command is hard to remember, and popular npm packages like ssl-checker require installation and have dependencies. A zero-dep npx tool that prints a clean one-screen summary fills a genuine daily-use gap for both local dev and CI pre-flight checks.",
