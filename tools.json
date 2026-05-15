@@ -1,5 +1,18 @@
 [
   {
+    "slug": "git-file-age",
+    "description": "Shows how long ago each tracked file in your git repo was last committed, so you can spot stale or abandoned code at a glance",
+    "thought_process": "Found this pain point while auditing a legacy Node.js codebase \u2014 grep and git log gave raw output but nothing showed the big picture of which files were active versus abandoned. Popular tools like depcheck focus on dependencies, not file-level activity. The git log output already contains exactly this information; it just needs one clean parsing pass to surface it. No existing npm package with meaningful weekly downloads does this.",
+    "problem": "There is no quick way to see which files in your codebase are actively maintained versus untouched for years \u2014 git log per file is tedious, and ls -la shows checkout dates that reset on every clone.",
+    "solution": "git-file-age runs a single git log command across your entire repository and renders a color-coded table of every tracked file with its last commit date, age in days, and committer.",
+    "method": "Uses Node.js built-in child_process to run one git log --name-only call across all tracked files, parses the output in a single pass (newest commit first) to find each file's most recent commit, then renders a sortable table with configurable staleness thresholds.",
+    "date": "2026-05-15",
+    "github": "https://github.com/anishpunati/git-file-age",
+    "price": 2.99,
+    "payUrl": "https://buy.stripe.com/7sY7sLdLDgbz4rg5gR77O0c",
+    "paymentLinkId": "plink_1TXKqtI2tQrvudWb7jxE7uhG"
+  },
+  {
     "slug": "bench-run",
     "description": "Benchmark any shell command with min/max/avg/median timing over N runs",
     "thought_process": "Found repeated Ask HN and r/devops threads asking how to benchmark a build script \u2014 the top answers always link to hyperfine, which requires cargo or brew. Developers who already have Node installed have no zero-dep equivalent that works via npx. The problem also shows up in CI: teams want to track whether their test suite is getting slower across PRs but have no lightweight way to do it without adding a heavy benchmarking framework.",
