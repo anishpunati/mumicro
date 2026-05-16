@@ -1,5 +1,18 @@
 [
   {
+    "slug": "cron-human",
+    "description": "Translate a cron expression into plain English and print the next 5 scheduled run times",
+    "thought_process": "Found repeated questions on r/devops and r/sysadmin asking 'what does this cron mean?' and 'when will this next run?'. Existing solutions are either web tools requiring a browser round-trip with no pipe/stdin support, or npm libraries like cronstrue that require installation and provide no next-run dates. A zero-dep CLI that runs instantly with npx fills this gap cleanly for the terminal workflow.",
+    "problem": "Developers and DevOps engineers frequently copy-paste cron expressions from docs or colleagues without a quick way to verify what they actually do \u2014 you have to either memorize the 5-field format or open a third-party web tool.",
+    "solution": "cron-human takes any standard 5-field cron expression and instantly prints a plain-English description plus the next 5 run times so you can verify correctness without leaving the terminal.",
+    "method": "Pure Node.js cron parser: splits the expression into 5 fields (minute, hour, day-of-month, month, day-of-week), evaluates each field including ranges, lists, and steps, then walks forward from the current UTC time to find the next 5 matching timestamps. No network calls, no dependencies.",
+    "date": "2026-05-16",
+    "github": "https://github.com/anishpunati/cron-human",
+    "price": 2.99,
+    "payUrl": "https://buy.stripe.com/cNiaEXbDv2kJcXMbFf77O0d",
+    "paymentLinkId": "plink_1TXgwlI2tQrvudWbefR1pjar"
+  },
+  {
     "slug": "git-file-age",
     "description": "Shows how long ago each tracked file in your git repo was last committed, so you can spot stale or abandoned code at a glance",
     "thought_process": "Found this pain point while auditing a legacy Node.js codebase \u2014 grep and git log gave raw output but nothing showed the big picture of which files were active versus abandoned. Popular tools like depcheck focus on dependencies, not file-level activity. The git log output already contains exactly this information; it just needs one clean parsing pass to surface it. No existing npm package with meaningful weekly downloads does this.",
