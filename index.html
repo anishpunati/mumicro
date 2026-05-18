@@ -28,37 +28,37 @@
 
     /* ── Header ──────────────────────────────────────────────────────── */
     header {
-      padding: 48px 24px 28px;
-      max-width: 1280px;
+      padding: clamp(28px, 4vh, 56px) clamp(12px, 3vw, 40px) 28px;
+      max-width: 1800px;
       margin: 0 auto;
     }
     .site-name {
-      font-size: 32px;
+      font-size: clamp(42px, 5vw, 72px);
       font-weight: 700;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.02em;
       color: var(--text);
     }
     .site-sub {
-      font-size: 12px;
+      font-size: 13px;
       color: var(--muted);
-      margin-top: 4px;
+      margin-top: 6px;
       letter-spacing: 0.02em;
     }
 
     /* ── Controls ────────────────────────────────────────────────────── */
     .controls {
-      max-width: 1280px;
+      max-width: 1800px;
       margin: 0 auto;
-      padding: 0 24px 20px;
+      padding: 0 clamp(12px, 3vw, 40px) 20px;
     }
 
     .search-input {
       width: 100%;
-      padding: 10px 14px;
+      padding: 12px 16px;
       background: var(--card);
       border: 1px solid var(--border);
       color: var(--text);
-      font-size: 13px;
+      font-size: 14px;
       font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
       outline: none;
       -webkit-appearance: none;
@@ -139,15 +139,15 @@
 
     /* ── Grid ────────────────────────────────────────────────────────── */
     .grid {
-      max-width: 1280px;
+      max-width: 1800px;
       margin: 0 auto;
-      padding: 0 24px 80px;
+      padding: 0 clamp(12px, 3vw, 40px) 80px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+      gap: 12px;
     }
-    @media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 760px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 1200px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 800px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 480px)  { .grid { grid-template-columns: 1fr; } }
 
     /* ── Card ────────────────────────────────────────────────────────── */
@@ -367,7 +367,7 @@
 
     /* ── Responsive tweaks ───────────────────────────────────────────── */
     @media (max-width: 600px) {
-      header, .controls, .grid { padding-left: 12px; padding-right: 12px; }
+      header, .controls, .grid { padding-left: 3vw; padding-right: 3vw; }
       header { padding-top: 28px; }
     }
   </style>
