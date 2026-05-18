@@ -1,5 +1,26 @@
 [
   {
+    "slug": "port-map",
+    "tool_type": "local-web-dashboard",
+    "description": "Scan all listening TCP ports on your machine and open a filterable web dashboard",
+    "thought_process": "The 'address already in use' error is one of the most common sources of friction in local dev, especially when running multiple services. lsof and ss both work but their output is a wall of text requiring piping through grep and awk. Found repeated threads on r/webdev and r/node asking for a better way to see what is using a port. No zero-dependency tool serves a visual port inspector \u2014 existing solutions require system GUI apps or complex installs.",
+    "problem": "When you hit 'address already in use' or need to audit what's running locally, you end up squinting at lsof -iTCP or ss -tlnp output \u2014 walls of text with no filtering, no sorting, and process names truncated mid-word.",
+    "solution": "port-map scans all TCP listeners in under a second and opens a filterable, sortable web dashboard showing port numbers, process names, PIDs, and bind addresses.",
+    "method": "Pure Node.js \u2014 runs lsof on macOS or ss on Linux via child_process.execSync, parses output into structured JSON, serves a self-contained HTML page via http.createServer, then auto-opens it in the default browser. Zero dependencies.",
+    "date": "2026-05-18",
+    "github": "https://github.com/anishpunati/port-map",
+    "price": 4.99,
+    "payUrl": "https://buy.stripe.com/28E28rbDvcZng9Y4cN77O0e",
+    "paymentLinkId": "plink_1TYZLlI2tQrvudWbqzAVN2Wu",
+    "tags": [
+      "ports",
+      "networking",
+      "devtools",
+      "dashboard",
+      "local"
+    ]
+  },
+  {
     "slug": "cron-human",
     "description": "Translate a cron expression into plain English and print the next 5 scheduled run times",
     "thought_process": "Found repeated questions on r/devops and r/sysadmin asking 'what does this cron mean?' and 'when will this next run?'. Existing solutions are either web tools requiring a browser round-trip with no pipe/stdin support, or npm libraries like cronstrue that require installation and provide no next-run dates. A zero-dep CLI that runs instantly with npx fills this gap cleanly for the terminal workflow.",
