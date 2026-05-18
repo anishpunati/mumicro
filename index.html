@@ -28,15 +28,14 @@
 
     /* ── Header ──────────────────────────────────────────────────────── */
     header {
-      padding: 48px 40px 28px;
+      padding: 48px 24px 28px;
       max-width: 1280px;
       margin: 0 auto;
     }
     .site-name {
-      font-size: 13px;
+      font-size: 32px;
       font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
+      letter-spacing: -0.01em;
       color: var(--text);
     }
     .site-sub {
@@ -50,7 +49,7 @@
     .controls {
       max-width: 1280px;
       margin: 0 auto;
-      padding: 0 40px 20px;
+      padding: 0 24px 20px;
     }
 
     .search-input {
@@ -142,7 +141,7 @@
     .grid {
       max-width: 1280px;
       margin: 0 auto;
-      padding: 0 40px 80px;
+      padding: 0 24px 80px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
@@ -368,7 +367,7 @@
 
     /* ── Responsive tweaks ───────────────────────────────────────────── */
     @media (max-width: 600px) {
-      header, .controls, .grid { padding-left: 16px; padding-right: 16px; }
+      header, .controls, .grid { padding-left: 12px; padding-right: 12px; }
       header { padding-top: 28px; }
     }
   </style>
