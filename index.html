@@ -1,808 +1,643 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>µ — microtools by anish punati</title>
-  <meta name="description" content="A growing collection of small tools that solve one problem well." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>µ micro — developer tools, shipped daily</title>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg:        #F4F3EF;
-      --surface:   #FDFCF8;
-      --ink:       #1A1917;
-      --muted:     #9A9790;
-      --accent:    #C8410A;
-      --border:    #E2E0D8;
-      --mono:      'JetBrains Mono', monospace;
-      --serif:     'Instrument Serif', Georgia, serif;
+      --bg:          #efece7;
+      --card:        #ffffff;
+      --border:      #e0ddd7;
+      --text:        #1c1a18;
+      --muted:       #8a8680;
+      --accent:      #c84724;
+      --accent-dim:  #f5ede9;
+      --chip-bg:     #e6e3dd;
+      --black:       #1a1a1a;
     }
 
-    html { font-size: 16px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background: var(--bg);
-      color: var(--ink);
-      font-family: var(--mono);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       min-height: 100vh;
-      padding: 0 clamp(1.5rem, 5vw, 4rem);
     }
 
-    /* ── Header ── */
+    /* ── Header ──────────────────────────────────────────────────────── */
     header {
+      padding: 48px 40px 28px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .site-name {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .site-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Controls ────────────────────────────────────────────────────── */
+    .controls {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 40px 20px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 13px;
+      font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+      margin-bottom: 14px;
+    }
+    .search-input::placeholder { color: var(--muted); }
+    .search-input:focus { border-color: var(--accent); }
+
+    .filter-row {
       display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      padding: 3.5rem 0 1.25rem;
-      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+      gap: 6px 18px;
+      flex-wrap: wrap;
     }
-
-    .brand {
-      font-family: var(--serif);
-      font-size: clamp(2.8rem, 6vw, 4.5rem);
-      line-height: 1;
-      letter-spacing: -0.02em;
-      color: var(--ink);
-      text-decoration: none;
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
     }
-
-    .brand em {
-      font-style: italic;
-      color: var(--accent);
-    }
-
-    nav {
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
+    .filter-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--muted);
+      white-space: nowrap;
+      padding: 3px 0;
+    }
+    .chip {
+      display: inline-block;
+      padding: 2px 8px;
+      background: var(--chip-bg);
+      border: 1px solid transparent;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.1s, color 0.1s, border-color 0.1s;
+      line-height: 1.8;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--accent); }
+    .chip.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
     }
 
-    nav a {
-      color: inherit;
-      text-decoration: none;
-      margin-left: 1.5rem;
-      transition: color 0.15s;
-    }
-    nav a:hover { color: var(--ink); }
-
-    /* ── Subscription banner ── */
-    .sub-banner {
+    .controls-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
-      background: var(--ink);
-      color: var(--bg);
-      padding: 1rem 1.5rem;
-      border-radius: 3px;
-      margin-bottom: 3rem;
+      margin-top: 12px;
+      min-height: 18px;
     }
-
-    .sub-label {
-      font-family: var(--serif);
-      font-style: italic;
-      color: var(--accent);
-      margin-right: .75rem;
-    }
-
-    .sub-banner-text {
-      font-size: .75rem;
-      letter-spacing: .03em;
-      opacity: .9;
-    }
-
-    .sub-cta {
-      background: var(--accent);
-      color: var(--bg);
-      text-decoration: none;
-      padding: .5rem 1.25rem;
-      border-radius: 2px;
-      font-size: .72rem;
-      letter-spacing: .06em;
-      white-space: nowrap;
-      transition: opacity .15s;
-      flex-shrink: 0;
-    }
-
-    .sub-cta:hover { opacity: .85; }
-
-    /* ── Tagline ── */
-    .tagline {
-      padding: 1.5rem 0 2rem;
-      font-family: var(--serif);
-      font-size: clamp(1rem, 2.2vw, 1.2rem);
-      font-style: italic;
+    .results-count {
+      font-size: 11px;
       color: var(--muted);
-      letter-spacing: 0.01em;
+      letter-spacing: 0.04em;
     }
-
-    /* ── Stats bar ── */
-    .stats {
-      display: flex;
-      gap: 2.5rem;
-      margin-bottom: 3rem;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.72rem;
-      letter-spacing: 0.06em;
+    .clear-btn {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--muted);
+      color: var(--accent);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      text-decoration: underline;
+      display: none;
     }
 
-    .stats strong {
-      display: block;
-      font-family: var(--serif);
-      font-size: 2rem;
-      font-style: italic;
-      letter-spacing: -0.02em;
-      color: var(--ink);
-      margin-bottom: 0.1rem;
-      text-transform: none;
-    }
-
-    /* ── Grid ── */
+    /* ── Grid ────────────────────────────────────────────────────────── */
     .grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 40px 80px;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-      gap: 1.5rem;
-      padding-bottom: 5rem;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
     }
+    @media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 760px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px)  { .grid { grid-template-columns: 1fr; } }
 
-    /* ── Card ── */
+    /* ── Card ────────────────────────────────────────────────────────── */
     .card {
-      background: var(--surface);
+      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 3px;
-      padding: 1.75rem;
+      padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
-      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
-      position: relative;
-      overflow: hidden;
       cursor: pointer;
+      transition: border-color 0.12s;
     }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: var(--accent);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.2s ease;
-    }
-
-    .card:hover {
-      border-color: #C8C6BC;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-      transform: translateY(-2px);
-    }
-
-    .card:hover::before { transform: scaleX(1); }
+    .card:hover,
+    .card.selected { border-color: var(--accent); }
 
     .card-meta {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 0.68rem;
-      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+    .type-badge {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--muted);
+      background: var(--chip-bg);
+      padding: 2px 7px;
+    }
+    .time-ago {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
 
-    .card-category {
-      background: var(--bg);
-      padding: 0.2rem 0.5rem;
-      border-radius: 2px;
-      border: 1px solid var(--border);
-    }
-
-    .card-name {
-      font-family: var(--serif);
-      font-size: 1.45rem;
-      line-height: 1.2;
+    .card-title {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.15;
       letter-spacing: -0.01em;
-      color: var(--ink);
+      margin-bottom: 8px;
+      font-family: Georgia, 'Times New Roman', serif;
+      word-break: break-word;
     }
-
     .card-desc {
-      font-size: 0.78rem;
-      line-height: 1.6;
-      color: #5C5A55;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.65;
       flex: 1;
     }
 
     .card-tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.35rem;
+      gap: 4px;
+      margin-top: 12px;
     }
-
-    .tag {
-      font-size: 0.65rem;
-      letter-spacing: 0.05em;
+    .tag-chip {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--muted);
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 0.15rem 0.45rem;
-      border-radius: 2px;
+      background: var(--chip-bg);
+      padding: 2px 6px;
     }
 
-    .card-links {
+    .card-actions {
       display: flex;
-      gap: 0.75rem;
+      gap: 8px;
+      margin-top: 14px;
       align-items: center;
-      padding-top: 0.5rem;
-      border-top: 1px solid var(--border);
-      flex-wrap: wrap;
     }
-
-    .link {
-      font-size: 0.7rem;
-      letter-spacing: 0.04em;
-      text-decoration: none;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      transition: color 0.15s;
-    }
-
-    .link:hover { color: var(--ink); }
-
-    .link-buy {
-      margin-left: auto;
-      background: var(--ink);
-      color: var(--bg) !important;
-      padding: 0.3rem 0.75rem;
-      border-radius: 2px;
-      transition: background 0.15s !important;
-    }
-
-    .link-buy:hover { background: var(--accent) !important; }
-
-    .link-sub {
-      background: transparent;
-      color: var(--accent) !important;
+    .btn-pass {
+      padding: 6px 12px;
       border: 1px solid var(--accent);
-      padding: 0.3rem 0.75rem;
-      border-radius: 2px;
-      transition: background 0.15s, color 0.15s !important;
+      background: transparent;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      line-height: 1.4;
+    }
+    .btn-pass:hover { background: var(--accent-dim); }
+    .btn-buy {
+      padding: 6px 12px;
+      background: var(--black);
+      border: 1px solid var(--black);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      line-height: 1.4;
+    }
+    .btn-buy:hover { background: #333; border-color: #333; }
+
+    .card-cta {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 10px;
     }
 
-    .link-sub:hover {
-      background: var(--accent) !important;
-      color: var(--bg) !important;
-    }
-
-    /* ── Detail Modal ── */
-    .modal-overlay {
-      display: none;
+    /* ── Modal ───────────────────────────────────────────────────────── */
+    .overlay {
       position: fixed;
       inset: 0;
-      background: rgba(26, 25, 23, 0.7);
-      backdrop-filter: blur(4px);
-      z-index: 100;
-      padding: clamp(1rem, 5vw, 3rem);
-      overflow-y: auto;
-      align-items: flex-start;
-      justify-content: center;
-    }
-
-    .modal-overlay.open {
-      display: flex;
-    }
-
-    .modal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      width: 100%;
-      max-width: 680px;
-      margin: auto;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .modal::before {
-      content: '';
-      display: block;
-      height: 3px;
-      background: var(--accent);
-    }
-
-    .modal-header {
-      padding: 2rem 2rem 1.25rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .modal-meta {
+      background: rgba(20, 18, 16, 0.5);
+      z-index: 200;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      font-size: 0.68rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.75rem;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s;
     }
+    .overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      max-width: 540px;
+      width: 100%;
+      max-height: 82vh;
+      overflow-y: auto;
+      padding: 32px;
+      position: relative;
+      transform: translateY(8px);
+      transition: transform 0.15s;
+    }
+    .overlay.open .modal { transform: translateY(0); }
 
     .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
       background: none;
       border: none;
-      cursor: pointer;
+      font-size: 20px;
       color: var(--muted);
-      font-size: 1.1rem;
-      padding: 0;
+      cursor: pointer;
       line-height: 1;
-      transition: color 0.15s;
+      padding: 2px 6px;
     }
-
-    .modal-close:hover { color: var(--ink); }
-
-    .modal-title {
-      font-family: var(--serif);
-      font-size: clamp(1.6rem, 4vw, 2.2rem);
-      letter-spacing: -0.02em;
-      line-height: 1.15;
-      color: var(--ink);
-      margin-bottom: 0.5rem;
-    }
-
-    .modal-desc {
-      font-size: 0.8rem;
-      line-height: 1.65;
-      color: #5C5A55;
-    }
-
-    .modal-body {
-      padding: 1.75rem 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .modal-section {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .modal-section-label {
-      font-size: 0.65rem;
+    .modal-close:hover { color: var(--text); }
+    .modal-badge {
+      font-size: 9px;
+      font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--accent);
-      font-weight: 500;
+      color: var(--muted);
+      background: var(--chip-bg);
+      padding: 2px 7px;
+      display: inline-block;
+      margin-bottom: 14px;
     }
-
-    .modal-section-text {
-      font-size: 0.82rem;
+    .modal-title {
+      font-size: 26px;
+      font-weight: 700;
+      font-family: Georgia, 'Times New Roman', serif;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    .modal-desc {
+      font-size: 14px;
+      color: var(--muted);
       line-height: 1.7;
-      color: var(--ink);
+      margin-bottom: 22px;
     }
-
-    .modal-divider {
-      height: 1px;
-      background: var(--border);
+    .modal-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 5px;
     }
-
-    .modal-footer {
-      padding: 1.25rem 2rem;
-      border-top: 1px solid var(--border);
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-      flex-wrap: wrap;
+    .modal-body {
+      font-size: 13px;
+      line-height: 1.7;
+      margin-bottom: 20px;
+      color: var(--text);
     }
-
     .modal-tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.35rem;
-      flex: 1;
+      gap: 4px;
+      margin-bottom: 24px;
     }
-
     .modal-actions {
       display: flex;
-      gap: 0.65rem;
-      align-items: center;
-      flex-wrap: wrap;
+      gap: 10px;
     }
 
-    .btn {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.05em;
-      text-decoration: none;
-      padding: 0.55rem 1.1rem;
-      border-radius: 2px;
-      white-space: nowrap;
-      transition: background 0.15s, color 0.15s, opacity 0.15s;
-      cursor: pointer;
-      border: none;
-    }
-
-    .btn-primary {
-      background: var(--ink);
-      color: var(--bg);
-    }
-
-    .btn-primary:hover { background: var(--accent); }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--accent);
-      border: 1px solid var(--accent);
-    }
-
-    .btn-outline:hover {
-      background: var(--accent);
-      color: var(--bg);
-    }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
-    }
-
-    .btn-ghost:hover { color: var(--ink); border-color: var(--ink); }
-
-    /* ── Empty state ── */
+    /* ── Empty ───────────────────────────────────────────────────────── */
     .empty {
       grid-column: 1 / -1;
-      padding: 5rem 0;
+      padding: 64px 0;
       text-align: center;
       color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.04em;
     }
 
-    .empty .glyph {
-      font-family: var(--serif);
-      font-size: 5rem;
-      font-style: italic;
-      display: block;
-      margin-bottom: 1rem;
-      opacity: 0.3;
+    /* ── Responsive tweaks ───────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      header, .controls, .grid { padding-left: 16px; padding-right: 16px; }
+      header { padding-top: 28px; }
     }
-
-    .empty p {
-      font-size: 0.8rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    /* ── Footer ── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 2rem 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.68rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    footer a { color: inherit; text-decoration: none; }
-    footer a:hover { color: var(--ink); }
-
-    /* ── Skeleton loader ── */
-    @keyframes shimmer {
-      0%   { background-position: -600px 0; }
-      100% { background-position: 600px 0; }
-    }
-
-    .skeleton {
-      background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%);
-      background-size: 600px 100%;
-      animation: shimmer 1.4s infinite linear;
-      border-radius: 2px;
-    }
-
-    .card.loading .card-name,
-    .card.loading .card-desc,
-    .card.loading .card-meta { color: transparent; }
-
-    .card.loading .card-name  { background: var(--border); border-radius: 2px; }
-
-    /* ── Tap hint on cards ── */
-    .card-hint {
-      font-size: 0.62rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: var(--muted);
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .card:hover .card-hint { opacity: 1; }
   </style>
 </head>
 <body>
 
 <header>
-  <a class="brand" href="/"><em>µ</em> micro</a>
-  <nav>
-    <a href="https://github.com/anishpunati" target="_blank" rel="noopener">GitHub ↗</a>
-  </nav>
+  <div class="site-name">µ micro</div>
+  <div class="site-sub">one developer tool, shipped every day — zero dependencies, runs with npx</div>
 </header>
 
-<p class="tagline">one problem. one tool. shipped daily.</p>
+<div class="controls">
+  <input id="search" class="search-input" type="search"
+         placeholder="search by name or description..."
+         autocomplete="off" spellcheck="false">
 
-<div class="sub-banner">
-  <div class="sub-banner-text">
-    <span class="sub-label">µ micro Pass</span>
-    Unlimited access to every tool, past and future — one flat rate.
+  <div class="filter-row">
+    <div class="filter-group">
+      <span class="filter-label">TYPE</span>
+      <div id="type-chips" style="display:flex;flex-wrap:wrap;gap:4px"></div>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">TAGS</span>
+      <div id="tag-chips" style="display:flex;flex-wrap:wrap;gap:4px"></div>
+    </div>
   </div>
-  <a href="https://buy.stripe.com/00w5kD9vngbzcXM8t377O03" id="subscribe-btn" class="sub-cta">Subscribe — $14.99 / month →</a>
-</div>
 
-<div class="stats">
-  <div><strong id="stat-count">—</strong>tools built</div>
-  <div><strong id="stat-latest">—</strong>last shipped</div>
-  <div><strong id="stat-categories">—</strong>categories</div>
-</div>
-
-<main class="grid" id="grid">
-  <!-- populated by JS -->
-</main>
-
-<!-- Detail Modal -->
-<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
-  <div class="modal" id="modal">
-    <div class="modal-header">
-      <div class="modal-meta">
-        <span id="modal-cat"></span>
-        <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
-      </div>
-      <h2 class="modal-title" id="modal-title"></h2>
-      <p class="modal-desc" id="modal-desc"></p>
-    </div>
-    <div class="modal-body" id="modal-body">
-      <!-- sections injected by JS -->
-    </div>
-    <div class="modal-footer">
-      <div class="modal-tags" id="modal-tags"></div>
-      <div class="modal-actions" id="modal-actions"></div>
-    </div>
+  <div class="controls-footer">
+    <span class="results-count" id="results-count"></span>
+    <button class="clear-btn" id="clear-btn">× clear filters</button>
   </div>
 </div>
 
-<footer>
-  <span>µ micro · built by <a href="https://github.com/anishpunati">anish punati</a></span>
-  <span id="footer-updated"></span>
-</footer>
+<div class="grid" id="grid"></div>
+
+<!-- Detail modal -->
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
+    <button class="modal-close" id="modal-close" aria-label="close">×</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
 
 <script>
-  const SUBSCRIPTION_URL = 'https://buy.stripe.com/00w5kD9vngbzcXM8t377O03';
-  const MIN_PRICE = 2.99;
+  // ── State ──────────────────────────────────────────────────────────────────
+  let allTools   = [];
+  let activeTypes = new Set();
+  let activeTags  = new Set();
+  let query       = '';
 
-  const CATEGORY_LABELS = {
-    cli:        'CLI',
-    web:        'Web App',
-    extension:  'Extension',
-    bot:        'Bot',
-    library:    'Library',
-    template:   'Template',
-    other:      'Other',
-  };
-
-  function formatDate(iso) {
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  // ── Field normalisation ────────────────────────────────────────────────────
+  // Handle both old schema (category, github_url) and new schema (tool_type, github)
+  function typeOf(t) {
+    return t.tool_type || t.category || 'classic-cli';
   }
-
-  function relativeDate(iso) {
-    const diff = Date.now() - new Date(iso);
-    const days = Math.floor(diff / 86400000);
-    if (days === 0) return 'today';
-    if (days === 1) return 'yesterday';
-    if (days < 30) return `${days}d ago`;
-    const months = Math.floor(days / 30);
-    return `${months}mo ago`;
+  function githubOf(t) {
+    return t.github || t.github_url || null;
   }
-
-  function displayPrice(tool) {
-    const raw = parseFloat(tool.price);
-    if (isNaN(raw) || raw <= 0) return null; // no price stored
-    return `$${raw.toFixed(2)}`;
+  function tagsOf(t) {
+    return Array.isArray(t.tags) ? t.tags : [];
   }
-
-  // Normalise field names — task writes slug/github/payUrl/npm;
-  // legacy entries may use name/github_url/payment_url
-  function normalise(t) {
-    return {
-      ...t,
-      name:        t.name        || t.slug       || '(unnamed)',
-      github_url:  t.github_url  || t.github     || null,
-      npm_url:     t.npm_url     || t.npm        || null,
-      live_url:    t.live_url                    || null,
-      payment_url: t.payment_url || t.payUrl     || null,
+  function nameOf(t) {
+    return t.slug || t.name || '?';
+  }
+  function typeLabel(raw) {
+    const m = {
+      'classic-cli':         'CLI',
+      'cli':                 'CLI',
+      'interactive-tui':     'TUI',
+      'local-web-dashboard': 'DASHBOARD',
+      'file-watcher':        'WATCHER',
+      'code-generator':      'GENERATOR',
+      'developer-tools':     'DEV-TOOLS',
+      'developer_tools':     'DEV-TOOLS',
     };
+    return m[raw] || raw.replace(/-/g, ' ').toUpperCase();
+  }
+  function timeAgo(ds) {
+    if (!ds) return '';
+    const d = Math.round((Date.now() - new Date(ds)) / 86400000);
+    if (d <= 0)  return 'TODAY';
+    if (d === 1) return '1D AGO';
+    return d + 'D AGO';
   }
 
-  function renderCard(raw) {
-    const tool = normalise(raw);
-    const card = document.createElement('article');
-    card.className = 'card';
-    card.setAttribute('tabindex', '0');
-    card.setAttribute('role', 'button');
-    card.setAttribute('aria-label', `Open details for ${tool.name}`);
-
-    const links = [];
-    if (tool.live_url)   links.push(`<a class="link" href="${tool.live_url}"   target="_blank" rel="noopener" onclick="event.stopPropagation()">⊹ live</a>`);
-
-    links.push(`<a class="link link-sub" href="${SUBSCRIPTION_URL}" target="_blank" rel="noopener" onclick="event.stopPropagation()">pass →</a>`);
-
-    // Only show buy button if there's an actual price AND a dedicated payment link
-    const price  = displayPrice(tool);
-    const payUrl = tool.payment_url;
-    if (price && payUrl) {
-      links.push(`<a class="link link-buy" href="${payUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">buy · ${price} →</a>`);
+  // ── Filter logic ───────────────────────────────────────────────────────────
+  function matches(t) {
+    if (query) {
+      const hay = [nameOf(t), t.description || '', t.problem || ''].join(' ').toLowerCase();
+      if (!hay.includes(query)) return false;
     }
-
-    const tags = (tool.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
-    const cat  = CATEGORY_LABELS[tool.category] || tool.category || 'cli';
-
-    card.innerHTML = `
-      <div class="card-meta">
-        <span class="card-category">${cat}</span>
-        <span title="${formatDate(tool.date)}">${relativeDate(tool.date)}</span>
-      </div>
-      <h2 class="card-name">${tool.name}</h2>
-      <p class="card-desc">${tool.description}</p>
-      ${tags ? `<div class="card-tags">${tags}</div>` : ''}
-      <div class="card-links">${links.join('')}</div>
-      <span class="card-hint">click for details →</span>
-    `;
-
-    card.addEventListener('click', () => openDetail(raw));
-    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDetail(raw); } });
-
-    return card;
+    if (activeTypes.size && !activeTypes.has(typeOf(t))) return false;
+    if (activeTags.size) {
+      const tt = tagsOf(t);
+      if (![...activeTags].some(tag => tt.includes(tag))) return false;
+    }
+    return true;
   }
 
-  function openDetail(raw) {
-    const tool   = normalise(raw);
-    const cat    = CATEGORY_LABELS[tool.category] || tool.category || 'cli';
-    const price  = displayPrice(tool);
-    const payUrl = tool.payment_url;
+  // ── Render grid ────────────────────────────────────────────────────────────
+  function renderGrid() {
+    const grid = document.getElementById('grid');
+    const visible = allTools.filter(matches);
 
-    document.getElementById('modal-cat').textContent   = `${cat} · ${formatDate(tool.date)}`;
-    document.getElementById('modal-title').textContent = tool.name;
-    document.getElementById('modal-desc').textContent  = tool.description;
+    const total = allTools.length;
+    document.getElementById('results-count').textContent =
+      visible.length === total
+        ? total + ' tools'
+        : visible.length + ' of ' + total + ' tools';
 
-    const body = document.getElementById('modal-body');
-    body.innerHTML = '';
-
-    const sections = [
-      { label: 'Why this tool',  key: 'thought_process', fallback: 'No build notes were recorded for this tool.' },
-      { label: 'The Problem',    key: 'problem'  },
-      { label: 'The Solution',   key: 'solution' },
-      { label: 'The Method',     key: 'method'   },
-    ];
-
-    let first = true;
-    sections.forEach(({ label, key, fallback }) => {
-      const text = tool[key] || (fallback && first && key === 'thought_process' ? fallback : null);
-      if (!text) return;
-      if (!first) {
-        const div = document.createElement('div');
-        div.className = 'modal-divider';
-        body.appendChild(div);
-      }
-      first = false;
-      const isPlaceholder = !tool[key];
-      const sec = document.createElement('div');
-      sec.className = 'modal-section';
-      sec.innerHTML = `
-        <span class="modal-section-label">${label}</span>
-        <p class="modal-section-text"${isPlaceholder ? ' style="color:var(--muted);font-style:italic"' : ''}>${text}</p>
-      `;
-      body.appendChild(sec);
-    });
-
-    const tagsEl = document.getElementById('modal-tags');
-    tagsEl.innerHTML = (tool.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
-
-    const actions = document.getElementById('modal-actions');
-    actions.innerHTML = '';
-
-    if (tool.live_url) {
-      const a = document.createElement('a');
-      a.className = 'btn btn-ghost';
-      a.href = tool.live_url;
-      a.target = '_blank';
-      a.rel = 'noopener';
-      a.textContent = '⊹ live demo';
-      actions.appendChild(a);
+    if (!visible.length) {
+      grid.innerHTML = '<div class="empty">no tools match — try clearing the filters</div>';
+      return;
     }
 
-    const subBtn = document.createElement('a');
-    subBtn.className = 'btn btn-outline';
-    subBtn.href = SUBSCRIPTION_URL;
-    subBtn.target = '_blank';
-    subBtn.rel = 'noopener';
-    subBtn.textContent = 'µ pass · $15/mo';
-    actions.appendChild(subBtn);
+    grid.innerHTML = visible.map(t => {
+      const tags = tagsOf(t);
+      const gh   = githubOf(t);
 
-    if (price && payUrl) {
-      const buyBtn = document.createElement('a');
-      buyBtn.className = 'btn btn-primary';
-      buyBtn.href = payUrl;
-      buyBtn.target = '_blank';
-      buyBtn.rel = 'noopener';
-      buyBtn.textContent = `buy · ${price}`;
-      actions.appendChild(buyBtn);
+      const tagsHtml = tags.length
+        ? '<div class="card-tags">' +
+          tags.map(tag => '<span class="tag-chip">' + tag + '</span>').join('') +
+          '</div>'
+        : '';
+
+      const passBtn = gh
+        ? '<a class="btn-pass" href="' + gh + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">pass →</a>'
+        : '<span class="btn-pass" style="opacity:.4;cursor:default">pass →</span>';
+
+      const buyBtn = t.payUrl
+        ? '<a class="btn-buy" href="' + t.payUrl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">buy · $' + Number(t.price).toFixed(2) + ' →</a>'
+        : '';
+
+      return '<div class="card" data-slug="' + nameOf(t) + '" onclick="openModal(\'' + nameOf(t) + '\')">' +
+        '<div class="card-meta">' +
+          '<span class="type-badge">' + typeLabel(typeOf(t)) + '</span>' +
+          '<span class="time-ago">' + timeAgo(t.date) + '</span>' +
+        '</div>' +
+        '<div class="card-title">' + nameOf(t) + '</div>' +
+        '<div class="card-desc">' + (t.description || '') + '</div>' +
+        tagsHtml +
+        '<div class="card-actions">' + passBtn + buyBtn + '</div>' +
+        '<div class="card-cta">CLICK FOR DETAILS →</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // ── Build filter chips (recomputed from current allTools each time) ─────────
+  function buildFilters() {
+    // Collect all unique types and tags present in the full dataset
+    const typeSet = new Set(allTools.map(typeOf));
+    const tagSet  = new Set();
+    allTools.forEach(t => tagsOf(t).forEach(tag => tagSet.add(tag)));
+
+    const typeWrap = document.getElementById('type-chips');
+    const tagWrap  = document.getElementById('tag-chips');
+
+    typeWrap.innerHTML = [...typeSet].sort().map(v =>
+      '<span class="chip' + (activeTypes.has(v) ? ' active' : '') + '" data-type="' + v + '">' +
+        typeLabel(v) +
+      '</span>'
+    ).join('');
+
+    tagWrap.innerHTML = [...tagSet].sort().map(v =>
+      '<span class="chip' + (activeTags.has(v) ? ' active' : '') + '" data-tag="' + v + '">' +
+        v +
+      '</span>'
+    ).join('');
+
+    typeWrap.querySelectorAll('.chip').forEach(el =>
+      el.addEventListener('click', () => {
+        const v = el.dataset.type;
+        activeTypes.has(v) ? activeTypes.delete(v) : activeTypes.add(v);
+        syncClear(); buildFilters(); renderGrid();
+      })
+    );
+    tagWrap.querySelectorAll('.chip').forEach(el =>
+      el.addEventListener('click', () => {
+        const v = el.dataset.tag;
+        activeTags.has(v) ? activeTags.delete(v) : activeTags.add(v);
+        syncClear(); buildFilters(); renderGrid();
+      })
+    );
+  }
+
+  function syncClear() {
+    const btn = document.getElementById('clear-btn');
+    btn.style.display = (activeTypes.size || activeTags.size || query) ? 'inline-block' : 'none';
+  }
+
+  // ── Modal ──────────────────────────────────────────────────────────────────
+  function openModal(slug) {
+    const t = allTools.find(x => nameOf(x) === slug);
+    if (!t) return;
+
+    const tags = tagsOf(t);
+    const gh   = githubOf(t);
+
+    const tagsHtml = tags.length
+      ? '<div class="modal-tags">' +
+        tags.map(tag => '<span class="tag-chip">' + tag + '</span>').join('') +
+        '</div>'
+      : '';
+
+    const passBtn = gh
+      ? '<a class="btn-pass" href="' + gh + '" target="_blank" rel="noopener">pass →</a>'
+      : '';
+    const buyBtn = t.payUrl
+      ? '<a class="btn-buy" href="' + t.payUrl + '" target="_blank" rel="noopener">buy · $' + Number(t.price).toFixed(2) + ' →</a>'
+      : '';
+
+    function section(label, text) {
+      if (!text) return '';
+      return '<div class="modal-label">' + label + '</div>' +
+             '<div class="modal-body">' + text + '</div>';
     }
 
-    const overlay = document.getElementById('modal-overlay');
-    overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    document.getElementById('modal-content').innerHTML =
+      '<span class="modal-badge">' + typeLabel(typeOf(t)) + '</span>' +
+      '<div class="modal-title">' + nameOf(t) + '</div>' +
+      '<div class="modal-desc">' + (t.description || '') + '</div>' +
+      section('PROBLEM', t.problem) +
+      section('SOLUTION', t.solution) +
+      section('HOW IT WORKS', t.method) +
+      tagsHtml +
+      '<div class="modal-actions">' + passBtn + buyBtn + '</div>';
+
+    document.getElementById('overlay').classList.add('open');
     document.getElementById('modal-close').focus();
   }
 
-  function closeDetail() {
-    document.getElementById('modal-overlay').classList.remove('open');
-    document.body.style.overflow = '';
+  function closeModal() {
+    document.getElementById('overlay').classList.remove('open');
   }
 
-  document.getElementById('modal-close').addEventListener('click', closeDetail);
-  document.getElementById('modal-overlay').addEventListener('click', e => {
-    if (e.target === document.getElementById('modal-overlay')) closeDetail();
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  document.getElementById('overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('overlay')) closeModal();
   });
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeDetail();
+    if (e.key === 'Escape') closeModal();
   });
 
-  function renderEmpty() {
-    const el = document.createElement('div');
-    el.className = 'empty';
-    el.innerHTML = `<span class="glyph">µ</span><p>first tool ships tomorrow at 4 am</p>`;
-    return el;
-  }
+  // ── Wire up search + clear ─────────────────────────────────────────────────
+  document.getElementById('search').addEventListener('input', e => {
+    query = e.target.value.trim().toLowerCase();
+    syncClear(); renderGrid();
+  });
 
-  async function init() {
-    const grid = document.getElementById('grid');
+  document.getElementById('clear-btn').addEventListener('click', () => {
+    activeTypes.clear(); activeTags.clear();
+    query = '';
+    document.getElementById('search').value = '';
+    syncClear(); buildFilters(); renderGrid();
+  });
 
-    try {
-      const res   = await fetch('tools.json?v=' + Date.now());
-      const tools = await res.json();
-
-      document.getElementById('stat-count').textContent = tools.length;
-
-      const sorted = [...tools].sort((a, b) => new Date(b.date) - new Date(a.date));
-      const latest = sorted[0];
-      document.getElementById('stat-latest').textContent = latest ? relativeDate(latest.date) : '—';
-
-      const cats = new Set(tools.map(t => t.category).filter(Boolean));
-      document.getElementById('stat-categories').textContent = cats.size || '—';
-
-      document.getElementById('footer-updated').textContent =
-        latest ? `last updated ${formatDate(latest.date)}` : '';
-
-      if (tools.length === 0) {
-        grid.appendChild(renderEmpty());
-      } else {
-        sorted.forEach(t => grid.appendChild(renderCard(t)));
-      }
-    } catch (e) {
-      grid.appendChild(renderEmpty());
-    }
-  }
-
-  init();
+  // ── Bootstrap ──────────────────────────────────────────────────────────────
+  fetch('./tools.json')
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(data => {
+      allTools = data;
+      buildFilters();
+      renderGrid();
+    })
+    .catch(() => {
+      document.getElementById('grid').innerHTML =
+        '<div class="empty">could not load tools.json — try refreshing</div>';
+    });
 </script>
+
 </body>
 </html>
