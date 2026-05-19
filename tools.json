@@ -1,5 +1,27 @@
 [
   {
+    "slug": "jlog-watch",
+    "tool_type": "file-watcher",
+    "description": "Watch a JSON log file and pretty-print each new line with ANSI colors and aligned fields",
+    "thought_process": "Found repeated complaints on r/node and r/devops about having to install pino-pretty or the bunyan CLI just to read your own app logs in development. Existing zero-dep alternatives either don't watch live files or require piping stdout rather than watching a persisted log file. A zero-dep file watcher that works on any JSON-per-line log file and shows clear ANSI output fills the gap cleanly without touching application code.",
+    "problem": "Structured JSON logs from frameworks like pino and bunyan are unreadable with tail -f \u2014 every line is a compact JSON blob with no color, no level emphasis, and no field alignment.",
+    "solution": "jlog-watch tails any log file, parses each JSON line as it arrives, and renders it with ANSI colors by log level, a human-readable timestamp, and key=value extras on one clean line.",
+    "method": "Pure Node.js using fs.watchFile() for change detection, manual byte-position tracking to read only new bytes since the last event, JSON.parse per line, and ANSI escape codes for coloring \u2014 zero npm dependencies.",
+    "date": "2026-05-19",
+    "github": "https://github.com/anishpunati/jlog-watch",
+    "price": 2.99,
+    "payUrl": "https://buy.stripe.com/28E4gz7nf2kJ4rg38J77O0g",
+    "paymentLinkId": "plink_1TYrnkI2tQrvudWbLJytHZed",
+    "tags": [
+      "json",
+      "logs",
+      "file-watcher",
+      "nodejs",
+      "devtools",
+      "pino"
+    ]
+  },
+  {
     "slug": "port-map",
     "tool_type": "local-web-dashboard",
     "description": "Scan all listening TCP ports on your machine and open a filterable web dashboard",
