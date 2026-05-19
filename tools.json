@@ -1,5 +1,26 @@
 [
   {
+    "slug": "json-explorer",
+    "tool_type": "local-web-dashboard",
+    "description": "Visualize any JSON file as an interactive collapsible tree in your browser \u2014 with search, path tracking, and copy-to-clipboard",
+    "thought_process": "Developers routinely paste JSON into online formatters like jsonformatter.org or jsoneditoronline.org, leaking API responses and auth tokens to third-party servers. jq is powerful but requires learning a mini-language for ad-hoc inspection. No popular zero-dep npx tool fills the gap \u2014 a local-web-dashboard format is the right choice here because the entire value is in the visual presentation, not the data transformation.",
+    "problem": "Debugging large or deeply nested JSON responses means pasting into online formatters (a privacy risk), squinting at jq output, or writing throwaway scripts \u2014 there is no instant zero-setup local tool that gives you a rich interactive view.",
+    "solution": "json-explorer parses any JSON file and serves a polished local web dashboard with a collapsible tree, live search, node path display, and one-click value copy \u2014 all in under a second.",
+    "method": "Pure Node.js: reads the file, spins up an http.createServer on port 7777, serves a single self-contained HTML page with all CSS and JS inlined, then opens the default browser; server auto-closes after 60 seconds or on Enter.",
+    "date": "2026-05-19",
+    "github": "https://github.com/anishpunati/json-explorer",
+    "price": 4.99,
+    "payUrl": "https://buy.stripe.com/fZu14ndLD4sR9LA6kV77O0h",
+    "paymentLinkId": "plink_1TYwqQI2tQrvudWb4gY8Qv6j",
+    "tags": [
+      "json",
+      "dashboard",
+      "debugging",
+      "devtools",
+      "node"
+    ]
+  },
+  {
     "slug": "jlog-watch",
     "tool_type": "file-watcher",
     "description": "Watch a JSON log file and pretty-print each new line with ANSI colors and aligned fields",
