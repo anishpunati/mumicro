@@ -1,5 +1,26 @@
 [
   {
+    "slug": "croncheck",
+    "tool_type": "interactive-tui",
+    "description": "Parse and preview cron expressions interactively \u2014 see the next 10 run times before you deploy",
+    "thought_process": "Found repeated complaints on r/devops and HN from developers who deployed broken cron schedules after writing expressions from memory. Online tools like crontab.guru exist but require a browser and fail offline. No popular zero-dep npx tool fills the gap for quick in-terminal verification before committing a schedule to production.",
+    "problem": "Cron syntax is notoriously hard to verify \u2014 developers copy expressions from Stack Overflow or write their own, then paste them into random online parsers to check them, often without offline access or confidence in edge-case handling.",
+    "solution": "croncheck is a zero-dependency interactive TUI that parses cron expressions locally, annotates each field in plain English, and shows the next 10 scheduled run times with relative timestamps \u2014 no browser, no network call.",
+    "method": "Pure Node.js cron parser that expands each field (minute, hour, day, month, weekday) into a sorted array of valid values using set arithmetic, then advances a Date object forward one minute at a time to collect the next N matching timestamps, rendered in a raw-mode terminal UI.",
+    "date": "2026-05-20",
+    "github": "https://github.com/anishpunati/croncheck",
+    "price": 4.99,
+    "payUrl": "https://buy.stripe.com/dRm3cv5f70cB9LAbFf77O0j",
+    "paymentLinkId": "plink_1TZ8teI2tQrvudWbzWtP0soV",
+    "tags": [
+      "cron",
+      "scheduling",
+      "devops",
+      "tui",
+      "nodejs"
+    ]
+  },
+  {
     "slug": "json-explorer",
     "tool_type": "local-web-dashboard",
     "description": "Visualize any JSON file as an interactive collapsible tree in your browser \u2014 with search, path tracking, and copy-to-clipboard",
