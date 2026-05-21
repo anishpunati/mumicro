@@ -1,5 +1,27 @@
 [
   {
+    "slug": "port-peek",
+    "tool_type": "interactive-tui",
+    "description": "Interactive TUI for browsing all listening ports and killing the process behind any port with a keypress",
+    "thought_process": "Found recurring complaints on r/node and r/webdev about the EADDRINUSE error forcing multi-step shell rituals to find and kill the blocking process. The top Stack Overflow answer for 'kill process on port' has millions of views, confirming this is an extremely common pain point. No popular zero-dep npm package provides an interactive alternative \u2014 they are all one-shot kill commands that require you to know the port number upfront. An interactive TUI felt like the right format because developers often want to survey all listening ports before deciding which to kill.",
+    "problem": "When a port is already in use, developers have to chain together lsof, grep, and kill commands to find and stop the offending process \u2014 there is no interactive way to scan all listening ports and act on them in one place.",
+    "solution": "port-peek renders a live table of all listening ports, their PIDs, and process names; pressing Enter on any row sends SIGKILL to that process immediately.",
+    "method": "Pure Node.js using child_process.execSync to run lsof -iTCP -sTCP:LISTEN on macOS (with ss/netstat fallback on Linux), then renders a full-screen ANSI TUI with raw mode stdin for arrow-key navigation and Enter-to-kill. No dependencies.",
+    "date": "2026-05-21",
+    "github": "https://github.com/anishpunati/port-peek",
+    "price": 4.99,
+    "payUrl": "https://buy.stripe.com/bJe6oHbDv8J7f5UgZz77O0k",
+    "paymentLinkId": "plink_1TZVoxI2tQrvudWbeA3AO19L",
+    "tags": [
+      "port",
+      "tui",
+      "network",
+      "process",
+      "devtools",
+      "nodejs"
+    ]
+  },
+  {
     "slug": "croncheck",
     "tool_type": "interactive-tui",
     "description": "Parse and preview cron expressions interactively \u2014 see the next 10 run times before you deploy",
