@@ -1,5 +1,26 @@
 [
   {
+    "slug": "buildwatch",
+    "tool_type": "file-watcher",
+    "description": "Watch your build output directory and report file size changes on every rebuild",
+    "thought_process": "Found repeated complaints in r/webdev and r/node about not noticing bundle size regressions until PR review or production. Existing tools like bundlesize and size-limit require CI config changes or build plugin integration. No popular zero-dep tool gives you instant terminal feedback during local development \u2014 a file watcher that just runs alongside your dev server fills this gap cleanly.",
+    "problem": "During development, bundle size creep goes unnoticed \u2014 there is no fast way to see that a code change just added 50 KB to your dist folder until it surfaces in a PR review or a production performance regression.",
+    "solution": "buildwatch sits alongside your dev server and logs a colored size report every time files change, flagging growth and shrinkage with delta percentages so you catch regressions the moment they happen.",
+    "method": "Pure Node.js using fs.watch() for directory monitoring and fs.stat() for file sizes, with 300ms debouncing to handle rapid build events, printing ANSI-colored per-file and total size deltas.",
+    "date": "2026-05-22",
+    "github": "https://github.com/anishpunati/buildwatch",
+    "price": 2.99,
+    "payUrl": "https://buy.stripe.com/3cIaEX4b3e3r3nc5gR77O0l",
+    "paymentLinkId": "plink_1TZsSQI2tQrvudWbx51n6edk",
+    "tags": [
+      "bundlesize",
+      "build",
+      "file-watcher",
+      "node",
+      "devtools"
+    ]
+  },
+  {
     "slug": "port-peek",
     "tool_type": "interactive-tui",
     "description": "Interactive TUI for browsing all listening ports and killing the process behind any port with a keypress",
