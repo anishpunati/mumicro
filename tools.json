@@ -1,5 +1,27 @@
 [
   {
+    "slug": "json-log-dash",
+    "tool_type": "local-web-dashboard",
+    "description": "Spin up a local web dashboard to browse, filter, and inspect JSON-structured log files",
+    "thought_process": "Found repeated complaints on r/node and Stack Overflow about pino/winston JSON logs being unreadable in the terminal \u2014 developers either use jq pipelines that only answer one question at a time, or pay for Datadog/Logtail just to browse local dev logs. Tools like pino-pretty only colorize the terminal; none provide a local browser UI with filtering and expandable records. No popular zero-dependency npm package fills this gap.",
+    "problem": "JSON-structured logs from node servers (pino, winston, bunyan) are unreadable as raw text \u2014 developers pipe through jq one query at a time or squint at minified lines, with no way to filter by level or expand nested fields without a paid cloud service.",
+    "solution": "json-log-dash reads a .log file or stdin, starts a local HTTP server, and opens a clean browser dashboard with level filters, full-text search, and expandable JSON record detail \u2014 all with zero dependencies.",
+    "method": "Pure Node.js with no dependencies: reads newline-delimited JSON with readline, serves a self-contained HTML page via http.createServer (port 7777), inlines all CSS and JavaScript as a template literal, and opens the browser with child_process.exec. Server shuts down automatically after 60 seconds of inactivity or on Enter.",
+    "date": "2026-05-25",
+    "github": "https://github.com/anishpunati/json-log-dash",
+    "price": 4.99,
+    "payUrl": "https://buy.stripe.com/00w4gz7nfaRf9LA5gR77O0n",
+    "paymentLinkId": "plink_1Tay9nI2tQrvudWbavjlAZs1",
+    "tags": [
+      "json",
+      "logs",
+      "dashboard",
+      "nodejs",
+      "devtools",
+      "pino"
+    ]
+  },
+  {
     "slug": "portmap",
     "tool_type": "local-web-dashboard",
     "description": "Scan all listening ports on localhost and visualise them in a browser dashboard with process names and PIDs",
