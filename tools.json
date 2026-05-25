@@ -1,5 +1,26 @@
 [
   {
+    "slug": "portmap",
+    "tool_type": "local-web-dashboard",
+    "description": "Scan all listening ports on localhost and visualise them in a browser dashboard with process names and PIDs",
+    "thought_process": "Found the complaint repeatedly on r/webdev and r/node \u2014 developers juggling Postgres, Redis, a webpack server, and a Node API all at once constantly type lsof or netstat and squint at the output. No popular zero-dep Node.js tool presents this data visually. A local web dashboard is a natural fit: the output is tabular, colour and typography help enormously, and auto-closing keeps it lightweight.",
+    "problem": "Developers running multiple local services \u2014 API servers, databases, webpack dev servers \u2014 frequently need to know what is listening on which port, but running lsof -iTCP -sTCP:LISTEN or netstat -an produces walls of unformatted text that are slow to read and impossible to scan at a glance.",
+    "solution": "portmap runs a single system command, parses the output, and opens a clean browser dashboard showing every listening port with its process name and PID \u2014 refreshable on demand and auto-closing after 60 seconds of inactivity.",
+    "method": "Uses Node.js child_process.execSync to run lsof -iTCP -sTCP:LISTEN -n -P (macOS/Linux) or netstat -ano (Windows), parses port/PID/process-name triples with regex, then serves a self-contained HTML dashboard via the built-in http module and opens the browser automatically.",
+    "date": "2026-05-24",
+    "github": "https://github.com/anishpunati/portmap",
+    "price": 4.99,
+    "payUrl": "https://buy.stripe.com/4gMbJ15f74sR2j87oZ77O0m",
+    "paymentLinkId": "plink_1TamTgI2tQrvudWbuW1QjOyk",
+    "tags": [
+      "network",
+      "ports",
+      "devops",
+      "dashboard",
+      "nodejs"
+    ]
+  },
+  {
     "slug": "buildwatch",
     "tool_type": "file-watcher",
     "description": "Watch your build output directory and report file size changes on every rebuild",
