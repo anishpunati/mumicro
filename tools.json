@@ -1,5 +1,27 @@
 [
   {
+    "slug": "stash-pick",
+    "tool_type": "interactive-tui",
+    "description": "Browse, apply, pop, and drop git stashes interactively with arrow-key navigation and inline diff preview",
+    "thought_process": "Found repeated complaints on r/git and r/commandline about the friction of inspecting git stashes before applying them. Every developer has had the experience of stash@{3}: WIP on main: something telling them nothing useful. Existing solutions like lazygit are full-blown TUI clients \u2014 there is no focused, zero-dep Node tool that does just this one thing. The narrowness is the point: it runs instantly with npx and does exactly one job.",
+    "problem": "git stash list only shows a cryptic index and branch name \u2014 to see what is inside stash@{2} you have to run a separate command, and applying or dropping any stash means typing out the full stash@{N} reference every time.",
+    "solution": "stash-pick renders all stashes in an arrow-key menu with the diff preview shown inline, so you can see exactly what each stash contains and act on it with a single keypress.",
+    "method": "Pure Node.js using process.stdin raw mode and ANSI escape codes to render a full-screen TUI, with child_process.execSync shelling out to git stash list, show, apply, pop, and drop. Zero runtime dependencies.",
+    "date": "2026-05-27",
+    "github": "https://github.com/anishpunati/stash-pick",
+    "price": 4.99,
+    "payUrl": "https://buy.stripe.com/6oUdR97nf7F35vk7oZ77O0o",
+    "paymentLinkId": "plink_1TbgCtI2tQrvudWbIGiIGzoj",
+    "tags": [
+      "git",
+      "stash",
+      "tui",
+      "interactive",
+      "terminal",
+      "devtools"
+    ]
+  },
+  {
     "slug": "json-log-dash",
     "tool_type": "local-web-dashboard",
     "description": "Spin up a local web dashboard to browse, filter, and inspect JSON-structured log files",
