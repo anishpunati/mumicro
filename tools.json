@@ -1,5 +1,26 @@
 [
   {
+    "slug": "stashpick",
+    "tool_type": "interactive-tui",
+    "description": "Interactive arrow-key git stash browser \u2014 preview diffs and apply, pop, or drop stashes without memorizing stash IDs",
+    "thought_process": "Found repeated complaints on r/git and HN about losing stash contents \u2014 developers stash work, forget what is in each one, and end up cherry-picking blindly or abandoning stashes entirely. Existing solutions like lazygit are full git UIs requiring separate installation; no zero-dependency npx tool fills the gap of a focused, single-purpose stash browser.",
+    "problem": "Running git stash list gives you cryptic stash@{N} IDs and terse messages; recovering the right stash means running git stash show -p stash@{N} for each candidate until you find what you need.",
+    "solution": "stashpick opens a full-screen TUI showing all stashes with a live diff preview on the right \u2014 arrow-key navigation and single-key apply, pop, or drop mean you never need to remember a stash ID.",
+    "method": "Pure Node.js: shells out to git stash list and git stash show -p via child_process, caches diff output per stash, and renders a two-pane terminal UI using raw ANSI escape codes and readline raw mode \u2014 zero npm dependencies.",
+    "date": "2026-05-28",
+    "github": "https://github.com/anishpunati/stashpick",
+    "price": 4.99,
+    "payUrl": "https://buy.stripe.com/fZu00j5f79Nb5vk24F77O0r",
+    "paymentLinkId": "plink_1Tc1LwI2tQrvudWbyBZcQN7K",
+    "tags": [
+      "git",
+      "stash",
+      "tui",
+      "cli",
+      "devtools"
+    ]
+  },
+  {
     "slug": "branch-cleaner",
     "tool_type": "interactive-tui",
     "description": "Interactively browse and delete stale git branches with arrow keys \u2014 see merge status, age, and last commit at a glance",
