@@ -1,5 +1,26 @@
 [
   {
+    "slug": "branch-cleaner",
+    "tool_type": "interactive-tui",
+    "description": "Interactively browse and delete stale git branches with arrow keys \u2014 see merge status, age, and last commit at a glance",
+    "thought_process": "Found this recurring complaint on r/git and r/webdev \u2014 developers with long-running projects end up with 30-60 local branches after a few months and the git branch -d workflow is tedious. Tools like git-branch-pruner exist on npm but they batch-delete without showing you what you are removing. An interactive TUI where you can see merge status and age side-by-side before confirming fills this gap cleanly.",
+    "problem": "Developers accumulate dozens of stale local git branches and cleaning them up requires manually running git log --merged, inspecting each branch, and issuing git branch -d repeatedly \u2014 there is no fast interactive way to review and bulk-delete branches in one pass.",
+    "solution": "branch-cleaner launches a full-screen TUI showing every local branch with its age, merge status, and last commit message; press d to mark branches for deletion, Enter to delete them all, no flags or manual git commands required.",
+    "method": "Pure Node.js using child_process.execSync to call git branch -v --sort=-committerdate and git branch --merged, then renders a live arrow-key-navigable list with ANSI escape codes and raw terminal mode \u2014 zero dependencies.",
+    "date": "2026-05-27",
+    "github": "https://github.com/anishpunati/branch-cleaner",
+    "price": 4.99,
+    "payUrl": "https://buy.stripe.com/cNibJ1fTL8J74rg24F77O0p",
+    "paymentLinkId": "plink_1Tbs17I2tQrvudWbhPu0HLU0",
+    "tags": [
+      "git",
+      "branch",
+      "tui",
+      "devtools",
+      "cli"
+    ]
+  },
+  {
     "slug": "stash-pick",
     "tool_type": "interactive-tui",
     "description": "Browse, apply, pop, and drop git stashes interactively with arrow-key navigation and inline diff preview",
